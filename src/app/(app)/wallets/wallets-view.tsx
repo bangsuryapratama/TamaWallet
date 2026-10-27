@@ -340,7 +340,7 @@ export function WalletsView({ initialUser }: WalletsViewProps) {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-1">
         <div>
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-zinc-950">
-            Kantong Duit ✨
+            Kantong Duit 
           </h1>
           <p className="text-xs sm:text-sm text-zinc-500 mt-0.5">
             Pisahin uang jajan, tabungan, dan dana darurat biar ga kecampur.
@@ -562,16 +562,16 @@ export function WalletsView({ initialUser }: WalletsViewProps) {
 
               {/* Baris 1: Header Kartu (Logo & Judul) */}
               <div className="relative z-10 flex items-start justify-between gap-3">
-                <div className="flex items-center gap-2.5 min-w-0">
+                <div className="flex items-start gap-2.5 min-w-0 flex-1">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white/20 text-xl select-none shadow-xs border border-white/15">
                     {wallet.emoji}
                   </div>
-                  <div className="min-w-0">
-                    <h3 className="text-sm font-bold tracking-tight text-white truncate">
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-sm sm:text-base font-bold tracking-tight text-white leading-snug break-words">
                       {wallet.name}
                     </h3>
-                    <div className="flex items-center gap-1.5 mt-0.5">
-                      <span className="text-[10px] text-zinc-300 font-semibold uppercase tracking-wider truncate">
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-0.5">
+                      <span className="text-[10px] text-zinc-300 font-semibold uppercase tracking-wider">
                         {isBca ? "PASSPORT BCA" : isJago ? "KARTU JAGO" : isGopay ? "GOPAY PLUS" : "DEBIT CARD"}
                       </span>
                       {wallet.isLocked && (
@@ -584,7 +584,7 @@ export function WalletsView({ initialUser }: WalletsViewProps) {
                 </div>
 
                 {/* LOGO RESMI BANK (100% Terlihat Jelas di Platter Putih) */}
-                <div className="shrink-0">
+                <div className="shrink-0 pt-0.5">
                   <BankCardBadge provider={wallet.provider} />
                 </div>
               </div>

@@ -333,16 +333,16 @@ export function BankCardBadge({
 }) {
   if (provider === "cash") {
     return (
-      <div className={`h-8.5 px-3 rounded-xl bg-white shadow-md flex items-center gap-1.5 text-zinc-950 font-black text-xs ${className}`}>
-        <Banknote className="h-4 w-4 text-emerald-600 stroke-[2.2]" />
+      <div className={`h-8 px-2.5 sm:px-3 rounded-xl bg-white shadow-md flex items-center gap-1.5 text-zinc-950 font-black text-[11px] sm:text-xs shrink-0 ${className}`}>
+        <Banknote className="h-3.5 w-3.5 text-emerald-600 stroke-[2.2]" />
         <span>TUNAI</span>
       </div>
     );
   }
 
   return (
-    <div className={`h-8.5 px-3 rounded-xl bg-white shadow-md flex items-center justify-center border border-white/60 ${className}`}>
-      <BankBrandLogo code={provider} className="h-5 w-auto" monochrome={false} />
+    <div className={`h-8 px-2.5 sm:px-3 rounded-xl bg-white shadow-md flex items-center justify-center border border-white/60 shrink-0 ${className}`}>
+      <BankBrandLogo code={provider} className="h-4.5 sm:h-5 w-auto" monochrome={false} />
     </div>
   );
 }
