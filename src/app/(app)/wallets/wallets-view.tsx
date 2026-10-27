@@ -340,7 +340,7 @@ export function WalletsView({ initialUser }: WalletsViewProps) {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-1">
         <div>
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-zinc-950">
-            Kantong Duit 
+            Kantong Duit 💰
           </h1>
           <p className="text-xs sm:text-sm text-zinc-500 mt-0.5">
             Pisahin uang jajan, tabungan, dan dana darurat biar ga kecampur.
@@ -567,15 +567,15 @@ export function WalletsView({ initialUser }: WalletsViewProps) {
                     {wallet.emoji}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <h3 className="text-sm sm:text-base font-bold tracking-tight text-white leading-snug break-words">
+                    <h3 className="text-sm font-bold tracking-tight text-white leading-snug break-normal">
                       {wallet.name}
                     </h3>
                     <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-0.5">
-                      <span className="text-[10px] text-zinc-300 font-semibold uppercase tracking-wider">
+                      <span className="text-[10px] text-zinc-300 font-semibold uppercase tracking-wider whitespace-nowrap">
                         {isBca ? "PASSPORT BCA" : isJago ? "KARTU JAGO" : isGopay ? "GOPAY PLUS" : "DEBIT CARD"}
                       </span>
                       {wallet.isLocked && (
-                        <span className="text-[10px] font-bold text-amber-300 shrink-0 flex items-center gap-0.5">
+                        <span className="text-[10px] font-bold text-amber-300 shrink-0 flex items-center gap-0.5 whitespace-nowrap">
                           • Kunci 🔒
                         </span>
                       )}

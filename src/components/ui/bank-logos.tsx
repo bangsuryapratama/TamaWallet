@@ -11,15 +11,18 @@ export interface BankLogoProps extends React.SVGProps<SVGSVGElement> {
  * Logo Resmi Bank Central Asia (BCA)
  * Menggunakan asset logo resmi Grup BCA yang 100% otentik
  */
-export function BcaLogo({ className = "h-6 w-auto", size, monochrome = false, style }: BankLogoProps) {
+export function BcaLogo({ className = "h-5 w-auto", size, monochrome = false, style }: BankLogoProps) {
+  const pixelHeight = size || 18;
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      src="/logos/bca.png?v=2"
+      src="/logos/bca.png?v=3"
       alt="Bank Central Asia (BCA)"
-      className={className}
+      className={`h-4.5 max-h-5 w-auto max-w-[85px] object-contain shrink-0 ${className}`}
       style={{
-        height: size ? `${size}px` : undefined,
+        height: `${pixelHeight}px`,
+        maxHeight: `${pixelHeight}px`,
+        maxWidth: "85px",
         width: "auto",
         objectFit: "contain",
         filter: monochrome ? "brightness(0) invert(1)" : undefined,
@@ -68,15 +71,18 @@ export function MandiriLogo({ className = "h-6 w-auto", size, monochrome = false
  * Logo Resmi Bank Jago
  * Menggunakan asset logo resmi Bank Jago yang 100% otentik
  */
-export function JagoLogo({ className = "h-6 w-auto", size, monochrome = false, style }: BankLogoProps) {
+export function JagoLogo({ className = "h-5 w-auto", size, monochrome = false, style }: BankLogoProps) {
+  const pixelHeight = size || 18;
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      src="/logos/jago.png?v=2"
+      src="/logos/jago.png?v=3"
       alt="Bank Jago"
-      className={className}
+      className={`h-4.5 max-h-5 w-auto max-w-[85px] object-contain shrink-0 ${className}`}
       style={{
-        height: size ? `${size}px` : undefined,
+        height: `${pixelHeight}px`,
+        maxHeight: `${pixelHeight}px`,
+        maxWidth: "85px",
         width: "auto",
         objectFit: "contain",
         filter: monochrome ? "brightness(0) invert(1)" : undefined,
@@ -165,15 +171,18 @@ export function BniLogo({ className = "h-6 w-auto", size, monochrome = false, ..
  * Logo Resmi GoPay
  * Menggunakan asset logo resmi GoPay yang 100% otentik
  */
-export function GopayLogo({ className = "h-6 w-auto", size, monochrome = false, style }: BankLogoProps) {
+export function GopayLogo({ className = "h-5 w-auto", size, monochrome = false, style }: BankLogoProps) {
+  const pixelHeight = size || 18;
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      src="/logos/gopay.png?v=2"
+      src="/logos/gopay.png?v=3"
       alt="GoPay"
-      className={className}
+      className={`h-4.5 max-h-5 w-auto max-w-[85px] object-contain shrink-0 ${className}`}
       style={{
-        height: size ? `${size}px` : undefined,
+        height: `${pixelHeight}px`,
+        maxHeight: `${pixelHeight}px`,
+        maxWidth: "85px",
         width: "auto",
         objectFit: "contain",
         filter: monochrome ? "brightness(0) invert(1)" : undefined,
@@ -333,7 +342,7 @@ export function BankCardBadge({
 }) {
   if (provider === "cash") {
     return (
-      <div className={`h-8 px-2.5 sm:px-3 rounded-xl bg-white shadow-md flex items-center gap-1.5 text-zinc-950 font-black text-[11px] sm:text-xs shrink-0 ${className}`}>
+      <div className={`h-8 px-2.5 rounded-xl bg-white shadow-md flex items-center gap-1.5 text-zinc-950 font-black text-[11px] sm:text-xs shrink-0 ${className}`}>
         <Banknote className="h-3.5 w-3.5 text-emerald-600 stroke-[2.2]" />
         <span>TUNAI</span>
       </div>
@@ -341,8 +350,8 @@ export function BankCardBadge({
   }
 
   return (
-    <div className={`h-8 px-2.5 sm:px-3 rounded-xl bg-white shadow-md flex items-center justify-center border border-white/60 shrink-0 ${className}`}>
-      <BankBrandLogo code={provider} className="h-4.5 sm:h-5 w-auto" monochrome={false} />
+    <div className={`h-8 px-2.5 rounded-xl bg-white shadow-md flex items-center justify-center border border-white/60 shrink-0 max-w-[90px] overflow-hidden ${className}`}>
+      <BankBrandLogo code={provider} className="h-4.5 w-auto max-h-4.5 max-w-[80px]" size={18} monochrome={false} />
     </div>
   );
 }
