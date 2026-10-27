@@ -8,8 +8,8 @@ export default async function WalletsPage() {
   let user = null;
 
   if (supabase) {
-    const { data } = await supabase.auth.getUser();
-    user = data.user;
+    const { data } = await supabase.auth.getSession();
+    user = data.session?.user ?? null;
   }
 
   return <WalletsView initialUser={user} />;
