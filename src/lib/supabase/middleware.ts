@@ -65,9 +65,26 @@ export async function updateSession(request: NextRequest) {
     },
   });
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const isRSC =
+    request.headers.get("RSC") === "1" ||
+    request.headers.has("next-router-prefetch") ||
+    request.nextUrl.searchParams.has("_rsc");
+
+  // Untuk navigasi client-side internal (RSC), gunakan getSession() lokal dari cookie (~0.3ms)
+  // guna menghindari round-trip HTTPS eksternal ke server Supabase (~300-500ms) pada tiap klik tab.
+  let user = null;
+  if (isRSC) {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    user = session?.user ?? null;
+  } else {
+    // Untuk hard refresh / kunjungan langsung pertama kali, validasi dengan getUser()
+    const {
+      data: { user: authUser },
+    } = await supabase.auth.getUser();
+    user = authUser;
+  }
 
   const pathname = request.nextUrl.pathname;
   const isAuthRoute = pathname.startsWith("/login");
@@ -76,7 +93,8 @@ export async function updateSession(request: NextRequest) {
     pathname.startsWith("/wallets") ||
     pathname.startsWith("/transactions") ||
     pathname.startsWith("/goals") ||
-    pathname.startsWith("/insights");
+    pathname.startsWith("/insights") ||
+    pathname.startsWith("/profile");
 
   // Jika user belum login dan mencoba mengakses rute privat
   if (!user && isProtectedRoute) {

@@ -11,6 +11,7 @@ import {
   TrendingUp,
   LogIn,
   LogOut,
+  User as UserIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
@@ -20,10 +21,11 @@ import { toast } from "sonner";
 
 export const navigationItems = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Wallet", href: "/wallets", icon: WalletCards },
   { name: "Transaksi", href: "/transactions", icon: ArrowLeftRight },
+  { name: "Wallet", href: "/wallets", icon: WalletCards },
   { name: "Goals", href: "/goals", icon: Target },
   { name: "Insight", href: "/insights", icon: TrendingUp },
+  { name: "Profil", href: "/profile", icon: UserIcon },
 ];
 
 export function Sidebar() {
