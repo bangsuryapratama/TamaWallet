@@ -9,42 +9,24 @@ export interface BankLogoProps extends React.SVGProps<SVGSVGElement> {
 
 /**
  * Logo Resmi Bank Central Asia (BCA)
- * Desain presisi emblem berlian biru BCA + huruf tebal BCA
+ * Menggunakan asset logo resmi Grup BCA yang 100% otentik
  */
-export function BcaLogo({ className = "h-6 w-auto", size, monochrome = false, ...props }: BankLogoProps) {
-  const primaryColor = monochrome ? "currentColor" : "#0060AF";
+export function BcaLogo({ className = "h-6 w-auto", size, monochrome = false, style }: BankLogoProps) {
   return (
-    <svg
-      viewBox="0 0 110 32"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src="/logos/bca.png"
+      alt="Bank Central Asia (BCA)"
       className={className}
-      style={size ? { height: size, width: "auto" } : undefined}
-      {...props}
-    >
-      {/* Emblem Berlian BCA */}
-      <path
-        d="M13 2L24.5 16L13 30L1.5 16L13 2Z"
-        fill={primaryColor}
-      />
-      <path
-        d="M24.5 16L34 30H13L24.5 16Z"
-        fill={monochrome ? "currentColor" : "#003A70"}
-      />
-      <circle cx="13" cy="16" r="3.5" fill="#FFFFFF" opacity={monochrome ? 0.3 : 1} />
-      {/* Teks BCA Resmi */}
-      <text
-        x="39"
-        y="25"
-        fill={primaryColor}
-        fontFamily="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Plus Jakarta Sans', sans-serif"
-        fontWeight="900"
-        fontSize="24"
-        letterSpacing="0.5"
-      >
-        BCA
-      </text>
-    </svg>
+      style={{
+        height: size ? `${size}px` : undefined,
+        width: "auto",
+        objectFit: "contain",
+        filter: monochrome ? "brightness(0) invert(1)" : undefined,
+        ...style,
+      }}
+      loading="eager"
+    />
   );
 }
 
