@@ -207,59 +207,8 @@ export function DashboardView({ initialUser }: DashboardViewProps) {
               </p>
             </div>
 
-            {/* Baris 3: 3-Box Ringkasan Cepat Seluruh Duit (1-Tap Switch) */}
-            <div className="grid grid-cols-3 gap-2 pt-3 border-t border-zinc-900">
-              <button
-                type="button"
-                onClick={() => setBalanceMode("spendable")}
-                className={cn(
-                  "p-2.5 rounded-xl text-left transition-all cursor-pointer active:scale-95",
-                  balanceMode === "spendable"
-                    ? "bg-zinc-900 border border-zinc-800 shadow-2xs"
-                    : "hover:bg-zinc-900/60 border border-transparent"
-                )}
-              >
-                <p className="text-[10px] text-zinc-400 font-medium">1. Siap Pakai</p>
-                <p className="text-xs font-bold text-zinc-100 mt-0.5 tabular-nums truncate">
-                  {showBalance ? balanceData.spendable.short : "••••"}
-                </p>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setBalanceMode("savings")}
-                className={cn(
-                  "p-2.5 rounded-xl text-left transition-all cursor-pointer active:scale-95",
-                  balanceMode === "savings"
-                    ? "bg-zinc-900 border border-zinc-800 shadow-2xs"
-                    : "hover:bg-zinc-900/60 border border-transparent"
-                )}
-              >
-                <p className="text-[10px] text-zinc-400 font-medium">2. Tabungan</p>
-                <p className="text-xs font-bold text-zinc-100 mt-0.5 tabular-nums truncate">
-                  {showBalance ? balanceData.savings.short : "••••"}
-                </p>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setBalanceMode("total")}
-                className={cn(
-                  "p-2.5 rounded-xl text-left transition-all cursor-pointer active:scale-95",
-                  balanceMode === "total"
-                    ? "bg-zinc-900 border border-zinc-800 shadow-2xs"
-                    : "hover:bg-zinc-900/60 border border-transparent"
-                )}
-              >
-                <p className="text-[10px] text-zinc-400 font-medium">3. Total Aset</p>
-                <p className="text-xs font-bold text-zinc-100 mt-0.5 tabular-nums truncate">
-                  {showBalance ? balanceData.total.short : "••••"}
-                </p>
-              </button>
-            </div>
-
-            {/* Baris 4: Arus Kas: Cuan Masuk & Jajan Keluar (Selalu Terbuka) */}
-            <div className="pt-3 border-t border-zinc-900 grid grid-cols-2 gap-4">
+            {/* Arus Kas: Cuan Masuk & Jajan Keluar (Selalu Terbuka) */}
+            <div className="pt-4 border-t border-zinc-900 grid grid-cols-2 gap-4">
               <div className="space-y-1 min-w-0">
                 <div className="flex items-center gap-1.5 text-xs text-zinc-400 font-medium">
                   <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800/40">
