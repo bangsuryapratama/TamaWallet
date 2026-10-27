@@ -13,14 +13,15 @@ import {
   CheckCircle2,
   Loader2,
   ArrowLeft,
-  ShieldCheck,
+  Shield,
+  Layers,
+  Sparkles,
+  Check,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/env";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 
 type AuthMode = "signin" | "signup";
 
@@ -80,166 +81,196 @@ function LoginForm() {
           if (error.message.includes("Invalid login credentials")) {
             setErrorMessage("Alamat email atau kata sandi yang Anda masukkan salah.");
           } else if (error.message.includes("Email not confirmed")) {
-            setErrorMessage("Email Anda belum diverifikasi. Silakan periksa inbox email Anda.");
+            setErrorMessage("Email belum diverifikasi. Silakan periksa inbox email Anda.");
           } else {
             setErrorMessage(error.message);
           }
           return;
         }
 
-        // Login berhasil
         router.push(redirectTo);
         router.refresh();
       } else {
-        // Mode Sign Up
         const { data, error } = await supabase.auth.signUp({
           email: email.trim(),
           password,
           options: {
             data: {
-              display_name: displayName.trim() || splitEmailName(email),
+              display_name: displayName.trim() || email.split("@")[0],
             },
           },
         });
 
         if (error) {
           if (error.message.includes("already registered")) {
-            setErrorMessage("Email ini sudah terdaftar. Silakan gunakan opsi Masuk.");
+            setErrorMessage("Email ini sudah terdaftar. Silakan beralih ke menu Masuk.");
           } else {
             setErrorMessage(error.message);
           }
           return;
         }
 
-        // Jika user otomatis mendapatkan session
         if (data.session) {
           router.push(redirectTo);
           router.refresh();
         } else {
-          // Jika konfirmasi email diaktifkan
           setSuccessMessage(
-            "Pendaftaran berhasil! Tautan konfirmasi telah dikirim ke email Anda. Silakan verifikasi sebelum masuk."
+            "Akun berhasil didaftarkan! Jika proyek Anda mengaktifkan verifikasi email, silakan periksa inbox Anda."
           );
           setMode("signin");
         }
       }
     } catch (err: unknown) {
       setErrorMessage(
-        err instanceof Error ? err.message : "Terjadi kesalahan yang tidak terduga."
+        err instanceof Error ? err.message : "Terjadi kendala tak terduga saat autentikasi."
       );
     } finally {
       setIsLoading(false);
     }
   };
 
-  function splitEmailName(str: string): string {
-    return str.split("@")[0] || "User";
-  }
-
   return (
-    <Card className="border-border shadow-sm">
-      <CardHeader className="space-y-1">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">
-            {mode === "signin" ? "Masuk ke Akun Anda" : "Daftar Akun Baru"}
-          </CardTitle>
-          <Badge variant="outline" className="text-[10px] font-mono">
-            Modul 1: Auth
-          </Badge>
-        </div>
-        <CardDescription className="text-xs">
-          {mode === "signin"
-            ? "Masukkan email dan kata sandi Anda untuk mengakses data finansial."
-            : "Buat akun pribadi baru untuk mulai mencatat keuangan secara mandiri."}
-        </CardDescription>
-      </CardHeader>
+    <div className="w-full max-w-md mx-auto">
+      {/* Segmented Auth Switcher */}
+      <div className="flex rounded-xl bg-card border border-border/80 p-1 mb-6 shadow-sm">
+        <button
+          type="button"
+          onClick={() => {
+            setMode("signin");
+            setErrorMessage(null);
+            setSuccessMessage(null);
+          }}
+          className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all ${
+            mode === "signin"
+              ? "bg-primary text-primary-foreground shadow-sm"
+              : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          Masuk ke Akun
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setMode("signup");
+            setErrorMessage(null);
+            setSuccessMessage(null);
+          }}
+          className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all ${
+            mode === "signup"
+              ? "bg-primary text-primary-foreground shadow-sm"
+              : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          Buat Akun Baru
+        </button>
+      </div>
 
-      <form onSubmit={handleAuth}>
-        <CardContent className="space-y-4">
-          {/* Error Alert */}
+      {/* Main Form Container */}
+      <div className="rounded-2xl border border-border/80 bg-card/60 backdrop-blur-xl p-6 sm:p-8 shadow-xl shadow-black/20">
+        <div className="mb-6 space-y-1">
+          <h2 className="text-xl font-bold tracking-tight text-foreground">
+            {mode === "signin" ? "Selamat Datang Kembali" : "Mulai Kelola Keuangan"}
+          </h2>
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            {mode === "signin"
+              ? "Akses ledger finansial personal Anda dengan aman."
+              : "Bebas langganan wajib, transparan, dan terisolasi penuh."}
+          </p>
+        </div>
+
+        <form onSubmit={handleAuth} className="space-y-4">
+          {/* Error Message */}
           {errorMessage && (
-            <div className="flex items-start gap-2.5 rounded-md border border-negative/30 bg-negative/10 p-3 text-xs text-negative">
+            <div className="flex items-start gap-2.5 rounded-lg border border-negative/30 bg-negative/10 p-3 text-xs text-negative animate-in fade-in-50">
               <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
               <span className="leading-relaxed">{errorMessage}</span>
             </div>
           )}
 
-          {/* Success Alert */}
+          {/* Success Message */}
           {successMessage && (
-            <div className="flex items-start gap-2.5 rounded-md border border-positive/30 bg-positive/10 p-3 text-xs text-positive">
+            <div className="flex items-start gap-2.5 rounded-lg border border-positive/30 bg-positive/10 p-3 text-xs text-positive animate-in fade-in-50">
               <CheckCircle2 className="h-4 w-4 shrink-0 mt-0.5" />
               <span className="leading-relaxed">{successMessage}</span>
             </div>
           )}
 
-          {/* Display Name Input (Only on Sign Up) */}
+          {/* Name Field (Sign Up Only) */}
           {mode === "signup" && (
-            <div className="space-y-1.5">
+            <div className="space-y-1.5 animate-in fade-in-50">
               <label
                 htmlFor="displayName"
                 className="text-xs font-medium text-foreground flex items-center gap-1.5"
               >
-                <UserIcon className="h-3.5 w-3.5 text-muted-foreground" />
-                <span>Nama Tampilan (Opsional)</span>
+                <UserIcon className="h-3.5 w-3.5 text-primary" />
+                <span>Nama Lengkap / Panggilan</span>
               </label>
               <Input
                 id="displayName"
                 type="text"
-                placeholder="Contoh: Surya"
+                placeholder="Contoh: Surya Pratama"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
                 disabled={isLoading}
-                autoComplete="name"
+                className="h-10 bg-background/60 text-sm focus:border-primary"
               />
             </div>
           )}
 
-          {/* Email Input */}
+          {/* Email Field */}
           <div className="space-y-1.5">
             <label
               htmlFor="email"
               className="text-xs font-medium text-foreground flex items-center gap-1.5"
             >
-              <Mail className="h-3.5 w-3.5 text-muted-foreground" />
+              <Mail className="h-3.5 w-3.5 text-primary" />
               <span>Alamat Email</span>
             </label>
             <Input
               id="email"
               type="email"
-              placeholder="nama@email.com"
+              placeholder="nama@domain.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={isLoading}
               required
               autoComplete="email"
+              className="h-10 bg-background/60 text-sm focus:border-primary"
             />
           </div>
 
-          {/* Password Input */}
+          {/* Password Field */}
           <div className="space-y-1.5">
-            <label
-              htmlFor="password"
-              className="text-xs font-medium text-foreground flex items-center gap-1.5"
-            >
-              <Lock className="h-3.5 w-3.5 text-muted-foreground" />
-              <span>Kata Sandi</span>
-            </label>
+            <div className="flex items-center justify-between">
+              <label
+                htmlFor="password"
+                className="text-xs font-medium text-foreground flex items-center gap-1.5"
+              >
+                <Lock className="h-3.5 w-3.5 text-primary" />
+                <span>Kata Sandi</span>
+              </label>
+              {mode === "signin" && (
+                <span className="text-[11px] text-muted-foreground">
+                  Minimal 6 karakter
+                </span>
+              )}
+            </div>
             <div className="relative">
               <Input
                 id="password"
                 type={showPassword ? "text" : "password"}
-                placeholder="Minimal 6 karakter"
+                placeholder="••••••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={isLoading}
                 required
                 autoComplete={mode === "signin" ? "current-password" : "new-password"}
-                className="pr-10"
+                className="h-10 bg-background/60 text-sm pr-10 focus:border-primary"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                 tabIndex={-1}
               >
                 {showPassword ? (
@@ -254,113 +285,161 @@ function LoginForm() {
           <Button
             type="submit"
             disabled={isLoading || !supabaseReady}
-            className="w-full gap-2 mt-2"
+            className="w-full h-11 text-sm font-semibold rounded-lg mt-2 transition-all shadow-md hover:shadow-primary/20"
           >
             {isLoading ? (
-              <>
+              <span className="flex items-center gap-2">
                 <Loader2 className="h-4 w-4 animate-spin" />
-                <span>Memproses...</span>
-              </>
+                <span>Memproses autentikasi...</span>
+              </span>
             ) : mode === "signin" ? (
-              "Masuk"
+              "Masuk ke TamaWallet"
             ) : (
-              "Buat Akun"
+              "Daftar Akun Baru"
             )}
           </Button>
-        </CardContent>
-      </form>
+        </form>
 
-      <CardFooter className="flex flex-col space-y-3 border-t border-border/60 pt-4">
-        <div className="flex items-center justify-center w-full text-xs text-muted-foreground">
-          {mode === "signin" ? (
-            <span>
-              Belum punya akun?{" "}
-              <button
-                type="button"
-                onClick={() => {
-                  setMode("signup");
-                  setErrorMessage(null);
-                  setSuccessMessage(null);
-                }}
-                className="font-medium text-primary hover:underline"
-              >
-                Daftar sekarang
-              </button>
-            </span>
-          ) : (
-            <span>
-              Sudah memiliki akun?{" "}
-              <button
-                type="button"
-                onClick={() => {
-                  setMode("signin");
-                  setErrorMessage(null);
-                  setSuccessMessage(null);
-                }}
-                className="font-medium text-primary hover:underline"
-              >
-                Masuk di sini
-              </button>
-            </span>
-          )}
+        {/* Security Pledge Footer */}
+        <div className="mt-6 pt-5 border-t border-border/60 flex items-center gap-2.5 text-[11px] text-muted-foreground">
+          <Shield className="h-4 w-4 text-primary shrink-0" />
+          <span>
+            Dilindungi Row Level Security (RLS) PostgreSQL & enkripsi token standar industri.
+          </span>
         </div>
-
-        <div className="flex items-start gap-2 text-xs text-muted-foreground">
-          <ShieldCheck className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-          <p className="text-[11px] leading-relaxed">
-            Terkoneksi langsung ke Supabase Auth dengan isolasi data Row Level Security (RLS).
-          </p>
-        </div>
-      </CardFooter>
-    </Card>
+      </div>
+    </div>
   );
 }
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center px-4 py-12 bg-background relative selection:bg-primary/20">
-      {/* Return to App Shell link */}
-      <div className="absolute top-6 left-6">
-        <Link
-          href="/dashboard"
-          className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          <span>Kembali ke Dashboard</span>
-        </Link>
-      </div>
+    <div className="min-h-screen bg-background relative overflow-hidden flex flex-col justify-between selection:bg-primary/20 selection:text-primary">
+      {/* Subtle Background Accent Glows (Financial Emerald & Deep Slate) */}
+      <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-primary/10 blur-[130px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-primary/5 blur-[150px] pointer-events-none" />
 
-      <div className="w-full max-w-md space-y-6">
-        {/* Brand Header */}
-        <div className="text-center space-y-2">
-          <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground font-bold text-xl shadow-md">
+      {/* Top Navigation Bar */}
+      <header className="relative z-10 flex items-center justify-between px-6 py-5 md:px-12 border-b border-border/40 backdrop-blur-md">
+        <Link href="/dashboard" className="flex items-center gap-3 group">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground font-black text-base shadow-sm group-hover:scale-105 transition-transform">
             T
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">
-            TamaWallet
-          </h1>
-          <p className="text-xs text-muted-foreground">
-            Satu sumber kebenaran pengelolaan keuangan personal
-          </p>
+          <div className="flex flex-col">
+            <span className="text-base font-bold tracking-tight text-foreground">
+              TamaWallet
+            </span>
+            <span className="text-[10px] text-muted-foreground tracking-wider uppercase font-medium">
+              Personal Wealth & Cashflow
+            </span>
+          </div>
+        </Link>
+
+        <Link
+          href="/dashboard"
+          className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5 rounded-lg hover:bg-card border border-transparent hover:border-border"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" />
+          <span>Dashboard Preview</span>
+        </Link>
+      </header>
+
+      {/* Main Dual-Column Content */}
+      <main className="relative z-10 flex-1 grid grid-cols-1 lg:grid-cols-12 items-center max-w-7xl mx-auto w-full px-6 py-8 lg:py-16 gap-12">
+        {/* Left Column: Brand Story & Financial Value Proposition */}
+        <div className="lg:col-span-7 space-y-8 pr-0 lg:pr-8">
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+            <Sparkles className="h-3.5 w-3.5" />
+            <span>Satu Sumber Informasi Keuangan Terpercaya</span>
+          </div>
+
+          <div className="space-y-4">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-foreground leading-[1.15]">
+              Ketahui posisi kekayaan Anda dengan{" "}
+              <span className="text-primary underline decoration-primary/30 underline-offset-8">
+                akurasi presisi
+              </span>
+              .
+            </h1>
+            <p className="text-sm sm:text-base text-muted-foreground max-w-xl leading-relaxed">
+              Bukan sekadar pencatat pengeluaran (*expense tracker*). TamaWallet memetakan
+              arus kas, multi-rekening bank, e-wallet, dan portofolio aset tanpa langganan wajib
+              serta tanpa halusinasi AI.
+            </p>
+          </div>
+
+          {/* Value Pillars */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+            <div className="rounded-xl border border-border/80 bg-card/40 p-4 space-y-1.5">
+              <div className="flex items-center gap-2 text-xs font-bold text-foreground">
+                <Check className="h-4 w-4 text-primary" />
+                <span>Ledger Deterministik</span>
+              </div>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Kalkulasi mutasi dan saldo berbasis integer Rupiah, bebas pembulatan float yang meleset.
+              </p>
+            </div>
+
+            <div className="rounded-xl border border-border/80 bg-card/40 p-4 space-y-1.5">
+              <div className="flex items-center gap-2 text-xs font-bold text-foreground">
+                <Shield className="h-4 w-4 text-primary" />
+                <span>Privasi Tingkat Database</span>
+              </div>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Row Level Security memastikan tidak ada pihak lain yang bisa membaca catatan finansial Anda.
+              </p>
+            </div>
+
+            <div className="rounded-xl border border-border/80 bg-card/40 p-4 space-y-1.5">
+              <div className="flex items-center gap-2 text-xs font-bold text-foreground">
+                <Layers className="h-4 w-4 text-primary" />
+                <span>Multi-Akun & Goals</span>
+              </div>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Kelola kas, bank, dan target keuangan terpisah tanpa menduplikasi nilai aset aktual.
+              </p>
+            </div>
+
+            <div className="rounded-xl border border-border/80 bg-card/40 p-4 space-y-1.5">
+              <div className="flex items-center gap-2 text-xs font-bold text-foreground">
+                <Sparkles className="h-4 w-4 text-primary" />
+                <span>Bebas Halusinasi AI</span>
+              </div>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                AI hanya membantu parsing transaksi dengan konfirmasi Anda, bukan mengarang saldo.
+              </p>
+            </div>
+          </div>
         </div>
 
-        {/* Suspense boundary for useSearchParams */}
-        <React.Suspense
-          fallback={
-            <Card className="p-8 text-center text-xs text-muted-foreground">
-              <Loader2 className="h-5 w-5 animate-spin mx-auto mb-2 text-primary" />
-              <span>Memuat formulir autentikasi...</span>
-            </Card>
-          }
-        >
-          <LoginForm />
-        </React.Suspense>
+        {/* Right Column: Interactive Login / Register Form */}
+        <div className="lg:col-span-5 w-full">
+          <React.Suspense
+            fallback={
+              <div className="rounded-2xl border border-border bg-card p-12 text-center text-xs text-muted-foreground">
+                <Loader2 className="h-6 w-6 animate-spin mx-auto mb-3 text-primary" />
+                <span>Menyiapkan formulir masuk...</span>
+              </div>
+            }
+          >
+            <LoginForm />
+          </React.Suspense>
+        </div>
+      </main>
 
-        {/* Security Notice */}
-        <p className="text-center text-[11px] text-muted-foreground">
-          Sesuai PRD Bagian 4.1: Tidak ada kredensial rahasia yang ditanam di frontend & tidak ada tombol login palsu.
-        </p>
-      </div>
+      {/* Minimalist Footer */}
+      <footer className="relative z-10 px-6 py-6 md:px-12 border-t border-border/40 text-center md:flex md:justify-between items-center text-xs text-muted-foreground">
+        <div>
+          <span>TamaWallet &copy; 2026. Free-first, Privacy-first, Financial Accuracy.</span>
+        </div>
+        <div className="flex items-center justify-center gap-4 mt-2 md:mt-0 font-mono text-[11px]">
+          <span>PRD v1.0.0</span>
+          <span>•</span>
+          <span>PWA Ready</span>
+          <span>•</span>
+          <span>PostgreSQL RLS</span>
+        </div>
+      </footer>
     </div>
   );
 }
