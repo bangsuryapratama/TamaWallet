@@ -553,7 +553,7 @@ export function WalletsView({ initialUser }: WalletsViewProps) {
             <div
               key={wallet.id}
               className={cn(
-                "group relative p-5 sm:p-6 rounded-[28px] border transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-lg",
+                "group relative p-5 sm:p-6 rounded-[28px] border flex flex-col justify-between overflow-hidden shadow-md transform-gpu will-change-transform",
                 cardBg
               )}
             >
@@ -563,7 +563,7 @@ export function WalletsView({ initialUser }: WalletsViewProps) {
               {/* Baris 1: Header Kartu (Logo & Judul) */}
               <div className="relative z-10 flex items-start justify-between gap-3">
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white/15 backdrop-blur-md text-xl select-none shadow-xs border border-white/10">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white/20 text-xl select-none shadow-xs border border-white/15">
                     {wallet.emoji}
                   </div>
                   <div className="min-w-0">
@@ -630,7 +630,7 @@ export function WalletsView({ initialUser }: WalletsViewProps) {
                     setSelectedWallet(wallet);
                     setIsTopUpModalOpen(true);
                   }}
-                  className="h-8.5 rounded-xl bg-white/15 hover:bg-white/25 active:scale-95 text-[11px] font-bold text-white flex items-center justify-center gap-1.5 transition-all cursor-pointer backdrop-blur-md"
+                  className="h-8.5 rounded-xl bg-white/15 hover:bg-white/25 active:scale-95 text-[11px] font-bold text-white flex items-center justify-center gap-1.5 transition-transform duration-100 cursor-pointer border border-white/10"
                 >
                   <PlusCircle className="h-3.5 w-3.5" />
                   <span>Top Up</span>
@@ -644,7 +644,7 @@ export function WalletsView({ initialUser }: WalletsViewProps) {
                     setTargetWalletId(other ? other.id : "");
                     setIsTransferModalOpen(true);
                   }}
-                  className="h-8.5 rounded-xl bg-white/15 hover:bg-white/25 active:scale-95 text-[11px] font-bold text-white flex items-center justify-center gap-1.5 transition-all cursor-pointer backdrop-blur-md"
+                  className="h-8.5 rounded-xl bg-white/15 hover:bg-white/25 active:scale-95 text-[11px] font-bold text-white flex items-center justify-center gap-1.5 transition-transform duration-100 cursor-pointer border border-white/10"
                 >
                   <ArrowLeftRight className="h-3.5 w-3.5" />
                   <span>Pindah</span>
@@ -653,7 +653,7 @@ export function WalletsView({ initialUser }: WalletsViewProps) {
                 <button
                   type="button"
                   onClick={() => toggleLockWallet(wallet.id, wallet.isLocked)}
-                  className="h-8.5 rounded-xl bg-white/15 hover:bg-white/25 active:scale-95 text-[11px] font-bold text-white flex items-center justify-center gap-1.5 transition-all cursor-pointer backdrop-blur-md"
+                  className="h-8.5 rounded-xl bg-white/15 hover:bg-white/25 active:scale-95 text-[11px] font-bold text-white flex items-center justify-center gap-1.5 transition-transform duration-100 cursor-pointer border border-white/10"
                 >
                   {wallet.isLocked ? (
                     <>

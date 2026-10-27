@@ -94,7 +94,7 @@ export function TopBar({ initialUser = null }: TopBarProps) {
   const initial = displayName.charAt(0).toUpperCase();
 
   return (
-    <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-zinc-100 bg-white/80 backdrop-blur-xl px-4 md:px-8">
+    <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-zinc-100 bg-white/95 backdrop-blur-md px-4 md:px-8 transform-gpu will-change-transform">
       {/* Mobile Title & Desktop Breadcrumb */}
       <div className="flex items-center gap-3">
         <Link
