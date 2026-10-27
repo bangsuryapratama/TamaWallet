@@ -1,6 +1,7 @@
 import * as React from "react";
+import { Banknote } from "lucide-react";
 
-interface BankLogoProps extends React.SVGProps<SVGSVGElement> {
+export interface BankLogoProps extends React.SVGProps<SVGSVGElement> {
   className?: string | undefined;
   size?: number | undefined;
   monochrome?: boolean | undefined;
@@ -8,37 +9,38 @@ interface BankLogoProps extends React.SVGProps<SVGSVGElement> {
 
 /**
  * Logo Resmi Bank Central Asia (BCA)
+ * Desain presisi emblem berlian biru BCA + huruf tebal BCA
  */
-export function BcaLogo({ className = "h-5 w-auto", size, monochrome = false, ...props }: BankLogoProps) {
+export function BcaLogo({ className = "h-6 w-auto", size, monochrome = false, ...props }: BankLogoProps) {
   const primaryColor = monochrome ? "currentColor" : "#0060AF";
   return (
     <svg
-      viewBox="0 0 120 40"
+      viewBox="0 0 110 32"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
       style={size ? { height: size, width: "auto" } : undefined}
       {...props}
     >
-      {/* BCA Emblem: Two interlocking stylized curved diamonds */}
+      {/* Emblem Berlian BCA */}
       <path
-        d="M12.5 7L24 18.5L12.5 30L1 18.5L12.5 7Z"
+        d="M13 2L24.5 16L13 30L1.5 16L13 2Z"
         fill={primaryColor}
       />
       <path
-        d="M24 18.5L35.5 30H12.5L24 18.5Z"
-        fill={monochrome ? "currentColor" : "#004B87"}
-        opacity={monochrome ? 0.8 : 1}
+        d="M24.5 16L34 30H13L24.5 16Z"
+        fill={monochrome ? "currentColor" : "#003A70"}
       />
-      {/* BCA Official Bold Letterforms */}
+      <circle cx="13" cy="16" r="3.5" fill="#FFFFFF" opacity={monochrome ? 0.3 : 1} />
+      {/* Teks BCA Resmi */}
       <text
-        x="42"
-        y="28"
+        x="39"
+        y="25"
         fill={primaryColor}
-        fontFamily="system-ui, -apple-system, sans-serif"
+        fontFamily="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Plus Jakarta Sans', sans-serif"
         fontWeight="900"
-        fontSize="22"
-        letterSpacing="-0.5"
+        fontSize="24"
+        letterSpacing="0.5"
       >
         BCA
       </text>
@@ -49,30 +51,29 @@ export function BcaLogo({ className = "h-5 w-auto", size, monochrome = false, ..
 /**
  * Logo Resmi Bank Mandiri
  */
-export function MandiriLogo({ className = "h-5 w-auto", size, monochrome = false, ...props }: BankLogoProps) {
+export function MandiriLogo({ className = "h-6 w-auto", size, monochrome = false, ...props }: BankLogoProps) {
   const primaryColor = monochrome ? "currentColor" : "#003D79";
   const yellowColor = monochrome ? "currentColor" : "#FDB813";
   return (
     <svg
-      viewBox="0 0 130 36"
+      viewBox="0 0 120 32"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
       style={size ? { height: size, width: "auto" } : undefined}
       {...props}
     >
-      {/* Mandiri Golden Ribbon */}
       <path
-        d="M98 6C105 6 114 10 122 17C114 15 106 17 99 22C103 16 109 13 116 11C110 9 104 8 98 6Z"
+        d="M92 4C98 4 107 8 116 16C108 14 100 16 93 21C97 15 103 12 110 10C104 8 98 7 92 4Z"
         fill={yellowColor}
       />
       <text
         x="2"
-        y="25"
+        y="24"
         fill={primaryColor}
-        fontFamily="system-ui, -apple-system, sans-serif"
+        fontFamily="-apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif"
         fontWeight="800"
-        fontSize="20"
+        fontSize="21"
         letterSpacing="-0.5"
       >
         mandırı
@@ -84,29 +85,29 @@ export function MandiriLogo({ className = "h-5 w-auto", size, monochrome = false
 /**
  * Logo Resmi Bank Jago
  */
-export function JagoLogo({ className = "h-5 w-auto", size, monochrome = false, ...props }: BankLogoProps) {
-  const orangeColor = monochrome ? "currentColor" : "#FFA800";
+export function JagoLogo({ className = "h-6 w-auto", size, monochrome = false, ...props }: BankLogoProps) {
+  const orangeColor = monochrome ? "currentColor" : "#FF9E00";
   return (
     <svg
-      viewBox="0 0 100 36"
+      viewBox="0 0 95 32"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
       style={size ? { height: size, width: "auto" } : undefined}
       {...props}
     >
-      <circle cx="16" cy="18" r="14" fill={orangeColor} />
+      <circle cx="15" cy="16" r="14" fill={orangeColor} />
       <path
-        d="M16 9C12 9 9 12 9 16C9 21 15 25 16 26C17 25 23 21 23 16C23 12 20 9 16 9Z"
+        d="M15 8C11.5 8 8.5 11 8.5 15C8.5 19.5 14 23 15 24C16 23 21.5 19.5 21.5 15C21.5 11 18.5 8 15 8Z"
         fill={monochrome ? "#000" : "#FFFFFF"}
       />
       <text
-        x="36"
-        y="25"
-        fill={monochrome ? "currentColor" : "#1E1E1E"}
-        fontFamily="system-ui, -apple-system, sans-serif"
-        fontWeight="800"
-        fontSize="20"
+        x="34"
+        y="23"
+        fill={monochrome ? "currentColor" : "#1A1A1A"}
+        fontFamily="-apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif"
+        fontWeight="900"
+        fontSize="22"
         letterSpacing="-0.5"
       >
         jago
@@ -118,35 +119,35 @@ export function JagoLogo({ className = "h-5 w-auto", size, monochrome = false, .
 /**
  * Logo Resmi Bank BRI
  */
-export function BriLogo({ className = "h-5 w-auto", size, monochrome = false, ...props }: BankLogoProps) {
+export function BriLogo({ className = "h-6 w-auto", size, monochrome = false, ...props }: BankLogoProps) {
   const primaryColor = monochrome ? "currentColor" : "#00529C";
   return (
     <svg
-      viewBox="0 0 100 36"
+      viewBox="0 0 95 32"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
       style={size ? { height: size, width: "auto" } : undefined}
       {...props}
     >
-      <rect x="2" y="4" width="28" height="28" rx="8" fill={primaryColor} />
+      <rect x="1" y="2" width="28" height="28" rx="8" fill={primaryColor} />
       <text
-        x="7"
-        y="24"
+        x="6"
+        y="22"
         fill="#FFFFFF"
-        fontFamily="system-ui, -apple-system, sans-serif"
+        fontFamily="-apple-system, BlinkMacSystemFont, sans-serif"
         fontWeight="900"
-        fontSize="14"
+        fontSize="15"
       >
         BR
       </text>
       <text
-        x="36"
-        y="25"
+        x="34"
+        y="24"
         fill={primaryColor}
-        fontFamily="system-ui, -apple-system, sans-serif"
+        fontFamily="-apple-system, BlinkMacSystemFont, sans-serif"
         fontWeight="900"
-        fontSize="21"
+        fontSize="23"
         letterSpacing="-0.5"
       >
         BRI
@@ -158,12 +159,12 @@ export function BriLogo({ className = "h-5 w-auto", size, monochrome = false, ..
 /**
  * Logo Resmi Bank BNI
  */
-export function BniLogo({ className = "h-5 w-auto", size, monochrome = false, ...props }: BankLogoProps) {
+export function BniLogo({ className = "h-6 w-auto", size, monochrome = false, ...props }: BankLogoProps) {
   const tealColor = monochrome ? "currentColor" : "#005E6A";
   const orangeColor = monochrome ? "currentColor" : "#F15A24";
   return (
     <svg
-      viewBox="0 0 105 36"
+      viewBox="0 0 95 32"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
@@ -172,17 +173,17 @@ export function BniLogo({ className = "h-5 w-auto", size, monochrome = false, ..
     >
       <text
         x="2"
-        y="25"
+        y="24"
         fill={tealColor}
-        fontFamily="system-ui, -apple-system, sans-serif"
+        fontFamily="-apple-system, BlinkMacSystemFont, sans-serif"
         fontWeight="900"
-        fontSize="22"
+        fontSize="24"
         letterSpacing="-0.5"
       >
         BNI
       </text>
       <path
-        d="M62 7L74 29H68L64 21H56V29H51V7H62ZM56 12V17H62L59 12H56Z"
+        d="M58 5L71 27H65L61 19H53V27H48V5H58ZM53 10V15H59L56 10H53Z"
         fill={orangeColor}
       />
     </svg>
@@ -192,26 +193,26 @@ export function BniLogo({ className = "h-5 w-auto", size, monochrome = false, ..
 /**
  * Logo Resmi GoPay
  */
-export function GopayLogo({ className = "h-5 w-auto", size, monochrome = false, ...props }: BankLogoProps) {
+export function GopayLogo({ className = "h-6 w-auto", size, monochrome = false, ...props }: BankLogoProps) {
   const primaryColor = monochrome ? "currentColor" : "#00AED6";
   return (
     <svg
-      viewBox="0 0 110 36"
+      viewBox="0 0 105 32"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
       style={size ? { height: size, width: "auto" } : undefined}
       {...props}
     >
-      <circle cx="16" cy="18" r="13" fill={primaryColor} />
-      <circle cx="16" cy="18" r="5" fill="#FFFFFF" />
+      <circle cx="15" cy="16" r="13" fill={primaryColor} />
+      <circle cx="15" cy="16" r="5" fill="#FFFFFF" />
       <text
-        x="35"
-        y="25"
-        fill={monochrome ? "currentColor" : "#1C2430"}
-        fontFamily="system-ui, -apple-system, sans-serif"
+        x="33"
+        y="24"
+        fill={monochrome ? "currentColor" : "#1A202C"}
+        fontFamily="-apple-system, BlinkMacSystemFont, sans-serif"
         fontWeight="800"
-        fontSize="19"
+        fontSize="21"
         letterSpacing="-0.5"
       >
         gopay
@@ -223,11 +224,11 @@ export function GopayLogo({ className = "h-5 w-auto", size, monochrome = false, 
 /**
  * Logo Resmi OVO
  */
-export function OvoLogo({ className = "h-5 w-auto", size, monochrome = false, ...props }: BankLogoProps) {
+export function OvoLogo({ className = "h-6 w-auto", size, monochrome = false, ...props }: BankLogoProps) {
   const primaryColor = monochrome ? "currentColor" : "#4C3494";
   return (
     <svg
-      viewBox="0 0 95 36"
+      viewBox="0 0 90 32"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
@@ -236,11 +237,11 @@ export function OvoLogo({ className = "h-5 w-auto", size, monochrome = false, ..
     >
       <text
         x="2"
-        y="26"
+        y="25"
         fill={primaryColor}
-        fontFamily="system-ui, -apple-system, sans-serif"
+        fontFamily="-apple-system, BlinkMacSystemFont, sans-serif"
         fontWeight="900"
-        fontSize="24"
+        fontSize="26"
         letterSpacing="2"
       >
         OVO
@@ -252,29 +253,29 @@ export function OvoLogo({ className = "h-5 w-auto", size, monochrome = false, ..
 /**
  * Logo Resmi DANA
  */
-export function DanaLogo({ className = "h-5 w-auto", size, monochrome = false, ...props }: BankLogoProps) {
+export function DanaLogo({ className = "h-6 w-auto", size, monochrome = false, ...props }: BankLogoProps) {
   const primaryColor = monochrome ? "currentColor" : "#118EEA";
   return (
     <svg
-      viewBox="0 0 100 36"
+      viewBox="0 0 95 32"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
       style={size ? { height: size, width: "auto" } : undefined}
       {...props}
     >
-      <rect x="2" y="6" width="24" height="24" rx="7" fill={primaryColor} />
+      <rect x="2" y="4" width="24" height="24" rx="7" fill={primaryColor} />
       <path
-        d="M8 12H14C17.5 12 19 14 19 18C19 22 17.5 24 14 24H8V12ZM11.5 15V21H14C15.8 21 16.5 20 16.5 18C16.5 16 15.8 15 14 15H11.5Z"
+        d="M8 10H14C17.5 10 19 12 19 16C19 20 17.5 22 14 22H8V10ZM11.5 13V19H14C15.8 19 16.5 18 16.5 16C16.5 14 15.8 13 14 13H11.5Z"
         fill="#FFFFFF"
       />
       <text
-        x="32"
-        y="25"
+        x="31"
+        y="23"
         fill={primaryColor}
-        fontFamily="system-ui, -apple-system, sans-serif"
+        fontFamily="-apple-system, BlinkMacSystemFont, sans-serif"
         fontWeight="900"
-        fontSize="19"
+        fontSize="21"
         letterSpacing="0.5"
       >
         DANA
@@ -286,29 +287,29 @@ export function DanaLogo({ className = "h-5 w-auto", size, monochrome = false, .
 /**
  * Logo Resmi ShopeePay
  */
-export function ShopeePayLogo({ className = "h-5 w-auto", size, monochrome = false, ...props }: BankLogoProps) {
+export function ShopeePayLogo({ className = "h-6 w-auto", size, monochrome = false, ...props }: BankLogoProps) {
   const primaryColor = monochrome ? "currentColor" : "#EE4D2D";
   return (
     <svg
-      viewBox="0 0 130 36"
+      viewBox="0 0 120 32"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
       style={size ? { height: size, width: "auto" } : undefined}
       {...props}
     >
-      <rect x="2" y="6" width="24" height="24" rx="7" fill={primaryColor} />
+      <rect x="2" y="4" width="24" height="24" rx="7" fill={primaryColor} />
       <path
-        d="M14 10C11.5 10 10 11.2 10 13C10 16 18 15 18 18C18 20 16 21 14 21C11.5 21 10.5 19.5 10.5 19.5L9.5 21C10.5 22 12 22.5 14 22.5C16.8 22.5 19.5 21 19.5 18C19.5 15 11.5 15.8 11.5 13C11.5 11.8 12.8 11.2 14 11.2C16 11.2 17 12.2 17 12.2L18 10.8C17 9.8 15.5 10 14 10Z"
+        d="M14 8C11.5 8 10 9.2 10 11C10 14 18 13 18 16C18 18 16 19 14 19C11.5 19 10.5 17.5 10.5 17.5L9.5 19C10.5 20 12 20.5 14 20.5C16.8 20.5 19.5 19 19.5 16C19.5 13 11.5 13.8 11.5 11C11.5 9.8 12.8 9.2 14 9.2C16 9.2 17 10.2 17 10.2L18 8.8C17 7.8 15.5 8 14 8Z"
         fill="#FFFFFF"
       />
       <text
-        x="32"
-        y="24"
+        x="31"
+        y="23"
         fill={primaryColor}
-        fontFamily="system-ui, -apple-system, sans-serif"
+        fontFamily="-apple-system, BlinkMacSystemFont, sans-serif"
         fontWeight="800"
-        fontSize="17"
+        fontSize="19"
         letterSpacing="-0.3"
       >
         ShopeePay
@@ -318,18 +319,18 @@ export function ShopeePayLogo({ className = "h-5 w-auto", size, monochrome = fal
 }
 
 /**
- * Registry Ikon Bank Berdasarkan Kode / Provider
+ * Registry Ikon Bank
  */
 export function BankBrandLogo({
   code,
-  className,
+  className = "h-6 w-auto",
   size,
   monochrome = false,
 }: {
   code: string;
-  className?: string;
-  size?: number;
-  monochrome?: boolean;
+  className?: string | undefined;
+  size?: number | undefined;
+  monochrome?: boolean | undefined;
 }) {
   const normalized = code.toLowerCase().trim();
   switch (normalized) {
@@ -354,4 +355,31 @@ export function BankBrandLogo({
     default:
       return null;
   }
+}
+
+/**
+ * Badge Platter Resmi Bank untuk Tampil Maksimal di Semua Warna Kartu
+ * Memberikan background putih glossy kontras tinggi agar logo 100% terbaca jelas.
+ */
+export function BankCardBadge({
+  provider,
+  className = "",
+}: {
+  provider: string;
+  className?: string;
+}) {
+  if (provider === "cash") {
+    return (
+      <div className={`h-8.5 px-3 rounded-xl bg-white shadow-md flex items-center gap-1.5 text-zinc-950 font-black text-xs ${className}`}>
+        <Banknote className="h-4 w-4 text-emerald-600 stroke-[2.2]" />
+        <span>TUNAI</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className={`h-8.5 px-3 rounded-xl bg-white shadow-md flex items-center justify-center border border-white/60 ${className}`}>
+      <BankBrandLogo code={provider} className="h-5 w-auto" monochrome={false} />
+    </div>
+  );
 }

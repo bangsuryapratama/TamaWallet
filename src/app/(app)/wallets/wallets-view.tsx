@@ -8,14 +8,17 @@ import {
   ArrowLeftRight,
   Sparkles,
   Lock,
+  Unlock,
   X,
-  Banknote,
   Search,
+  Wifi,
+  PlusCircle,
+  TrendingUp,
 } from "lucide-react";
 import { User } from "@supabase/supabase-js";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import { BankBrandLogo } from "@/components/ui/bank-logos";
+import { BankBrandLogo, BankCardBadge } from "@/components/ui/bank-logos";
 import { getCachedShowBalance, setCachedShowBalance } from "@/lib/auth-cache";
 
 interface WalletsViewProps {
@@ -30,75 +33,80 @@ export interface PocketWallet {
   emoji: string;
   balance: number;
   accountNumber?: string | undefined;
-  theme: "zinc" | "blue" | "amber" | "cyan" | "emerald" | "purple";
+  holderName?: string | undefined;
+  isLocked?: boolean | undefined;
   createdAt: number;
 }
 
 const DEFAULT_WALLETS: PocketWallet[] = [
   {
     id: "wallet-bca-1",
-    name: "BCA Utama Jajan",
+    name: "BCA Tahapan Prioritas",
     provider: "bca",
     category: "spendable",
     emoji: "💳",
-    balance: 5450000,
-    accountNumber: "•••• 8912",
-    theme: "blue",
+    balance: 8750000,
+    accountNumber: "5241 •••• •••• 8912",
+    holderName: "SURYA PRATAMA",
+    isLocked: false,
     createdAt: Date.now() - 30 * 24 * 60 * 60 * 1000,
   },
   {
     id: "wallet-jago-1",
-    name: "Jago Dana Darurat",
+    name: "Jago Dana Darurat Santai",
     provider: "jago",
     category: "savings",
     emoji: "🎯",
-    balance: 12000000,
-    accountNumber: "•••• 1029",
-    theme: "amber",
+    balance: 15000000,
+    accountNumber: "1029 •••• •••• 4410",
+    holderName: "SURYA PRATAMA",
+    isLocked: true,
     createdAt: Date.now() - 25 * 24 * 60 * 60 * 1000,
   },
   {
     id: "wallet-gopay-1",
-    name: "GoPay Kopi & Mart",
+    name: "GoPay Jajan & Kopi",
     provider: "gopay",
     category: "spendable",
     emoji: "☕",
-    balance: 320000,
-    accountNumber: "0812 •••• 992",
-    theme: "cyan",
+    balance: 450000,
+    accountNumber: "0812 •••• 8992",
+    holderName: "SURYA PRATAMA",
+    isLocked: false,
     createdAt: Date.now() - 20 * 24 * 60 * 60 * 1000,
   },
   {
     id: "wallet-cash-1",
-    name: "Kas Tunai Saku",
+    name: "Kas Tunai di Dompet",
     provider: "cash",
     category: "spendable",
     emoji: "💵",
-    balance: 150000,
-    accountNumber: "Uang Fisik",
-    theme: "zinc",
+    balance: 300000,
+    accountNumber: "Uang Fisik Saku",
+    holderName: "SURYA PRATAMA",
+    isLocked: false,
     createdAt: Date.now() - 10 * 24 * 60 * 60 * 1000,
   },
 ];
 
-const STORAGE_KEY = "tamawallet_prototype_wallets_v1";
+const STORAGE_KEY = "tamawallet_prototype_wallets_v2";
 
 const BANK_PROVIDERS = [
-  { code: "bca", name: "BCA", type: "Bank" },
-  { code: "mandiri", name: "Mandiri", type: "Bank" },
-  { code: "jago", name: "Bank Jago", type: "Bank Digital" },
-  { code: "bri", name: "BRI", type: "Bank" },
-  { code: "bni", name: "BNI", type: "Bank" },
-  { code: "gopay", name: "GoPay", type: "E-Wallet" },
-  { code: "ovo", name: "OVO", type: "E-Wallet" },
-  { code: "dana", name: "DANA", type: "E-Wallet" },
-  { code: "shopeepay", name: "ShopeePay", type: "E-Wallet" },
-  { code: "cash", name: "Kas Tunai", type: "Uang Fisik" },
+  { code: "bca", name: "BCA", label: "Bank BCA" },
+  { code: "mandiri", name: "Mandiri", label: "Bank Mandiri" },
+  { code: "jago", name: "Bank Jago", label: "Bank Jago" },
+  { code: "bri", name: "BRI", label: "Bank BRI" },
+  { code: "bni", name: "BNI", label: "Bank BNI" },
+  { code: "gopay", name: "GoPay", label: "GoPay" },
+  { code: "ovo", name: "OVO", label: "OVO" },
+  { code: "dana", name: "DANA", label: "DANA" },
+  { code: "shopeepay", name: "ShopeePay", label: "ShopeePay" },
+  { code: "cash", name: "Kas Tunai", label: "Kas Tunai" },
 ];
 
 const EMOJI_OPTIONS = ["💳", "☕", "🎯", "🛵", "🍕", "✈️", "🏠", "💻", "🎁", "💎", "🍿", "🍣", "👕", "🚗"];
 
-export function WalletsView({ initialUser: _initialUser }: WalletsViewProps) {
+export function WalletsView({ initialUser }: WalletsViewProps) {
   const [wallets, setWallets] = React.useState<PocketWallet[]>(() => {
     if (typeof window === "undefined") return DEFAULT_WALLETS;
     try {
@@ -121,7 +129,8 @@ export function WalletsView({ initialUser: _initialUser }: WalletsViewProps) {
   // Modals state
   const [isAddModalOpen, setIsAddModalOpen] = React.useState(false);
   const [isTransferModalOpen, setIsTransferModalOpen] = React.useState(false);
-  const [selectedWalletForTransfer, setSelectedWalletForTransfer] = React.useState<PocketWallet | null>(null);
+  const [isTopUpModalOpen, setIsTopUpModalOpen] = React.useState(false);
+  const [selectedWallet, setSelectedWallet] = React.useState<PocketWallet | null>(null);
 
   // Form State for New Wallet
   const [newName, setNewName] = React.useState("");
@@ -130,11 +139,13 @@ export function WalletsView({ initialUser: _initialUser }: WalletsViewProps) {
   const [newEmoji, setNewEmoji] = React.useState("💳");
   const [newBalance, setNewBalance] = React.useState("");
   const [newAccountNum, setNewAccountNum] = React.useState("");
-  const [newTheme, setNewTheme] = React.useState<PocketWallet["theme"]>("zinc");
 
   // Form State for Transfer
   const [targetWalletId, setTargetWalletId] = React.useState<string>("");
   const [transferAmount, setTransferAmount] = React.useState<string>("");
+
+  // Form State for Top Up
+  const [topUpAmount, setTopUpAmount] = React.useState<string>("");
 
   const saveWallets = (updated: PocketWallet[]) => {
     setWallets(updated);
@@ -188,6 +199,11 @@ export function WalletsView({ initialUser: _initialUser }: WalletsViewProps) {
     });
   }, [wallets, activeTab, searchQuery]);
 
+  const defaultHolder =
+    initialUser?.user_metadata?.full_name?.toUpperCase() ||
+    initialUser?.email?.split("@")[0]?.toUpperCase() ||
+    "SURYA PRATAMA";
+
   const handleCreateWallet = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newName.trim()) {
@@ -204,19 +220,19 @@ export function WalletsView({ initialUser: _initialUser }: WalletsViewProps) {
       category: newCategory,
       emoji: newEmoji,
       balance: cleanAmount,
-      accountNumber: newAccountNum.trim() || undefined,
-      theme: newTheme,
+      accountNumber: newAccountNum.trim() || `${Math.floor(1000 + Math.random() * 9000)} •••• •••• ${Math.floor(1000 + Math.random() * 9000)}`,
+      holderName: defaultHolder,
+      isLocked: newCategory === "savings",
       createdAt: Date.now(),
     };
 
     const nextList = [created, ...wallets];
     saveWallets(nextList);
 
-    toast.success(`Kantong "${created.name}" berhasil dibuat! ✨`, {
+    toast.success(`Kartu "${created.name}" resmi dibuat! 🎉`, {
       description: `Saldo awal: Rp ${cleanAmount.toLocaleString("id-ID")}`,
     });
 
-    // Reset form
     setNewName("");
     setNewBalance("");
     setNewAccountNum("");
@@ -225,12 +241,12 @@ export function WalletsView({ initialUser: _initialUser }: WalletsViewProps) {
 
   const handleQuickTransfer = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedWalletForTransfer) return;
+    if (!selectedWallet) return;
     if (!targetWalletId) {
       toast.error("Pilih kantong tujuan transfer");
       return;
     }
-    if (targetWalletId === selectedWalletForTransfer.id) {
+    if (targetWalletId === selectedWallet.id) {
       toast.error("Kantong tujuan tidak boleh sama dengan sumber");
       return;
     }
@@ -240,13 +256,13 @@ export function WalletsView({ initialUser: _initialUser }: WalletsViewProps) {
       toast.error("Nominal transfer harus lebih dari Rp 0");
       return;
     }
-    if (amount > selectedWalletForTransfer.balance) {
+    if (amount > selectedWallet.balance) {
       toast.error("Saldo kantong sumber tidak mencukupi!");
       return;
     }
 
     const updated = wallets.map((w) => {
-      if (w.id === selectedWalletForTransfer.id) {
+      if (w.id === selectedWallet.id) {
         return { ...w, balance: w.balance - amount };
       }
       if (w.id === targetWalletId) {
@@ -259,19 +275,59 @@ export function WalletsView({ initialUser: _initialUser }: WalletsViewProps) {
     const targetWallet = wallets.find((w) => w.id === targetWalletId);
 
     toast.success(`Berhasil pindah dana Rp ${amount.toLocaleString("id-ID")}! ⚡`, {
-      description: `Dari ${selectedWalletForTransfer.name} ke ${targetWallet?.name}`,
+      description: `Dari ${selectedWallet.name} ke ${targetWallet?.name}`,
     });
 
     setIsTransferModalOpen(false);
-    setSelectedWalletForTransfer(null);
+    setSelectedWallet(null);
     setTransferAmount("");
   };
 
-  const openTransferFor = (wallet: PocketWallet) => {
-    setSelectedWalletForTransfer(wallet);
-    const other = wallets.find((w) => w.id !== wallet.id);
-    setTargetWalletId(other ? other.id : "");
-    setIsTransferModalOpen(true);
+  const handleTopUp = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedWallet) return;
+
+    const amount = parseInt(topUpAmount.replace(/\D/g, "") || "0", 10);
+    if (amount <= 0) {
+      toast.error("Nominal isi saldo harus lebih dari Rp 0");
+      return;
+    }
+
+    const updated = wallets.map((w) => {
+      if (w.id === selectedWallet.id) {
+        return { ...w, balance: w.balance + amount };
+      }
+      return w;
+    });
+
+    saveWallets(updated);
+
+    toast.success(`Isi saldo berhasil! + Rp ${amount.toLocaleString("id-ID")} 🎉`, {
+      description: `Saldo ${selectedWallet.name} sekarang: Rp ${(selectedWallet.balance + amount).toLocaleString("id-ID")}`,
+    });
+
+    setIsTopUpModalOpen(false);
+    setSelectedWallet(null);
+    setTopUpAmount("");
+  };
+
+  const toggleLockWallet = (walletId: string, currentLocked: boolean | undefined) => {
+    const updated = wallets.map((w) => {
+      if (w.id === walletId) {
+        return { ...w, isLocked: !currentLocked };
+      }
+      return w;
+    });
+    saveWallets(updated);
+    if (!currentLocked) {
+      toast("Kantong dikunci 🔒", {
+        description: "Saldo aman terkunci, tidak bisa ditarik jajan sembarangan.",
+      });
+    } else {
+      toast.success("Kantong dibuka 🔓", {
+        description: "Saldo siap digunakan kembali.",
+      });
+    }
   };
 
   const formatRupiah = (val: number) => {
@@ -283,11 +339,9 @@ export function WalletsView({ initialUser: _initialUser }: WalletsViewProps) {
       {/* 1. Header Kantong Duit */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-1">
         <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-zinc-950">
-              Kantong Duit ✨
-            </h1>
-          </div>
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-zinc-950">
+            Kantong Duit ✨
+          </h1>
           <p className="text-xs sm:text-sm text-zinc-500 mt-0.5">
             Pisahin uang jajan, tabungan, dan dana darurat biar ga kecampur.
           </p>
@@ -303,8 +357,8 @@ export function WalletsView({ initialUser: _initialUser }: WalletsViewProps) {
         </button>
       </div>
 
-      {/* 2. Cockpit Kartu Total Seluruh Kantong */}
-      <div className="rounded-3xl bg-zinc-950 text-white p-6 sm:p-7 shadow-[0_16px_40px_-10px_rgba(0,0,0,0.3)] space-y-5">
+      {/* 2. Cockpit Kartu Total Seluruh Kantong + Dopamine Allocation Bar */}
+      <div className="rounded-3xl bg-zinc-950 text-white p-6 sm:p-7 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.35)] space-y-5">
         <div className="flex items-center justify-between">
           <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
             Total Seluruh Kantong
@@ -347,42 +401,50 @@ export function WalletsView({ initialUser: _initialUser }: WalletsViewProps) {
             )}
           </div>
           <p className="text-xs text-zinc-400 mt-2 font-medium">
-            Terbagi di {wallets.length} kantong aktif ⚡
+            Terbagi rapi di {wallets.length} pos keuangan aktif ⚡
           </p>
         </div>
 
-        {/* Alokasi Cepat: Siap Pakai vs Tabungan */}
-        <div className="pt-4 border-t border-zinc-900 grid grid-cols-2 sm:grid-cols-3 gap-3">
-          <div className="space-y-0.5 min-w-0">
-            <span className="text-[11px] text-zinc-400 font-medium flex items-center gap-1">
-              <span>☕</span>
-              <span>Siap Pakai</span>
-            </span>
-            <p className="text-sm sm:text-base font-bold text-emerald-400 tabular-nums truncate">
-              {showBalance ? formatRupiah(totals.spendable) : "••••"}
-            </p>
-          </div>
+        {/* Visual Dopamine Allocation Progress Bar */}
+        {totals.totalAll > 0 && (
+          <div className="space-y-1.5 pt-1">
+            <div className="h-2.5 w-full rounded-full bg-zinc-900 overflow-hidden flex shadow-inner">
+              {wallets.map((w, idx) => {
+                const pct = (w.balance / totals.totalAll) * 100;
+                if (pct <= 0) return null;
+                const colors = [
+                  "bg-blue-500",
+                  "bg-amber-400",
+                  "bg-cyan-400",
+                  "bg-emerald-400",
+                  "bg-purple-400",
+                ];
+                const barColor =
+                  w.provider === "bca"
+                    ? "bg-[#0060AF]"
+                    : w.provider === "jago"
+                    ? "bg-[#FF9E00]"
+                    : w.provider === "gopay"
+                    ? "bg-[#00AED6]"
+                    : colors[idx % colors.length];
 
-          <div className="space-y-0.5 min-w-0">
-            <span className="text-[11px] text-zinc-400 font-medium flex items-center gap-1">
-              <span>🎯</span>
-              <span>Tabungan</span>
-            </span>
-            <p className="text-sm sm:text-base font-bold text-zinc-200 tabular-nums truncate">
-              {showBalance ? formatRupiah(totals.savings) : "••••"}
-            </p>
-          </div>
+                return (
+                  <div
+                    key={w.id}
+                    title={`${w.name}: ${pct.toFixed(1)}%`}
+                    style={{ width: `${pct}%` }}
+                    className={`${barColor} h-full transition-all duration-500`}
+                  />
+                );
+              })}
+            </div>
 
-          <div className="space-y-0.5 min-w-0 col-span-2 sm:col-span-1">
-            <span className="text-[11px] text-zinc-400 font-medium flex items-center gap-1">
-              <span>📈</span>
-              <span>Investasi</span>
-            </span>
-            <p className="text-sm sm:text-base font-bold text-zinc-400 tabular-nums truncate">
-              {showBalance ? formatRupiah(totals.investment) : "••••"}
-            </p>
+            <div className="flex items-center justify-between text-[11px] text-zinc-400 font-medium pt-1">
+              <span>Siap Pakai: {formatRupiah(totals.spendable)}</span>
+              <span>Tabungan: {formatRupiah(totals.savings)}</span>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* 3. Filter Kategori & Pencarian */}
@@ -439,7 +501,7 @@ export function WalletsView({ initialUser: _initialUser }: WalletsViewProps) {
           </button>
         </div>
 
-        {/* Search Bar Minimalis */}
+        {/* Search Bar */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
           <input
@@ -452,101 +514,163 @@ export function WalletsView({ initialUser: _initialUser }: WalletsViewProps) {
         </div>
       </div>
 
-      {/* 4. Grid Kartu Kantong (Fintech Style ala Apple Card) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {/* 4. Grid Kartu Fisik Mewah ala Apple Card & Bank Jago (KLIMAKS) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4.5">
         {filteredWallets.map((wallet) => {
           const isBca = wallet.provider === "bca";
-          const isSavings = wallet.category === "savings";
+          const isJago = wallet.provider === "jago";
+          const isGopay = wallet.provider === "gopay";
+          const isMandiri = wallet.provider === "mandiri";
+          const isCash = wallet.provider === "cash";
+
+          // Skema visual kartu super klimaks
+          let cardBg =
+            "bg-gradient-to-br from-[#18181B] via-[#0F0F12] to-[#09090B] border-zinc-800 text-white shadow-xl";
+
+          if (isBca) {
+            // BCA Royal Sapphire Metallic
+            cardBg =
+              "bg-gradient-to-br from-[#003B73] via-[#002244] to-[#001428] border-[#004B87]/50 text-white shadow-[0_18px_40px_-10px_rgba(0,60,175,0.4)]";
+          } else if (isJago) {
+            // Jago Sunny Amber Metallic
+            cardBg =
+              "bg-gradient-to-br from-[#4A2600] via-[#261300] to-[#120900] border-amber-500/40 text-white shadow-[0_18px_40px_-10px_rgba(255,158,0,0.3)]";
+          } else if (isGopay) {
+            // GoPay Cyber Cyan Metallic
+            cardBg =
+              "bg-gradient-to-br from-[#003847] via-[#001E26] to-[#000E12] border-cyan-500/40 text-white shadow-[0_18px_40px_-10px_rgba(0,174,214,0.3)]";
+          } else if (isMandiri) {
+            // Mandiri Deep Blue Navy
+            cardBg =
+              "bg-gradient-to-br from-[#002D54] via-[#00172D] to-[#000A14] border-amber-400/40 text-white shadow-[0_18px_40px_-10px_rgba(253,184,19,0.25)]";
+          } else if (isCash) {
+            // Kas Tunai Deep Emerald
+            cardBg =
+              "bg-gradient-to-br from-[#05331C] via-[#031C0F] to-[#010D07] border-emerald-500/40 text-white shadow-[0_18px_40px_-10px_rgba(16,185,129,0.25)]";
+          }
 
           return (
             <div
               key={wallet.id}
               className={cn(
-                "group relative p-5 rounded-3xl border transition-all duration-200 flex flex-col justify-between shadow-2xs hover:shadow-md",
-                wallet.theme === "blue" || isBca
-                  ? "bg-gradient-to-br from-zinc-950 via-zinc-900 to-[#002D54] text-white border-zinc-800"
-                  : wallet.theme === "amber"
-                  ? "bg-gradient-to-br from-zinc-950 via-zinc-900 to-[#3D2500] text-white border-zinc-800"
-                  : wallet.theme === "cyan"
-                  ? "bg-gradient-to-br from-zinc-950 via-zinc-900 to-[#003847] text-white border-zinc-800"
-                  : "bg-zinc-950 text-white border-zinc-800"
+                "group relative p-5 sm:p-6 rounded-[28px] border transition-all duration-300 flex flex-col justify-between overflow-hidden active:scale-[0.98]",
+                cardBg
               )}
             >
-              {/* Header Kartu: Emoji + Nama + Logo Resmi Bank */}
-              <div className="flex items-start justify-between gap-3">
+              {/* Iridescent Light Sheen Overlay */}
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-white/10 via-transparent to-transparent opacity-70" />
+
+              {/* Baris Atas: Emoji + Nama + Badge Logo Resmi Bank (Sangat Jelas & Kontras) */}
+              <div className="relative z-10 flex items-start justify-between gap-3">
                 <div className="flex items-center gap-2.5">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-md text-lg select-none">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/15 backdrop-blur-md text-xl select-none shadow-xs border border-white/10">
                     {wallet.emoji}
                   </div>
                   <div>
                     <h3 className="text-sm font-bold tracking-tight text-white line-clamp-1">
                       {wallet.name}
                     </h3>
-                    <p className="text-[11px] text-zinc-400 font-medium">
-                      {wallet.category === "spendable"
-                        ? "Siap Pakai"
-                        : wallet.category === "savings"
-                        ? "Tabungan Terkunci"
-                        : "Investasi"}
-                    </p>
+                    <div className="flex items-center gap-1.5 mt-0.5">
+                      <span className="text-[10px] text-zinc-300 font-semibold uppercase tracking-wider">
+                        {isBca ? "PASSPORT BCA" : isJago ? "KARTU JAGO" : isGopay ? "GOPAY PLUS" : "DEBIT CARD"}
+                      </span>
+                      {wallet.isLocked && (
+                        <span className="text-[10px] font-bold text-amber-300 flex items-center gap-0.5">
+                          • Terkunci 🔒
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
 
-                {/* Logo Resmi Bank / Provider */}
-                <div className="flex items-center h-7 px-2.5 rounded-xl bg-white/10 backdrop-blur-md">
-                  {wallet.provider === "cash" ? (
-                    <div className="flex items-center gap-1 text-[11px] font-bold text-zinc-200">
-                      <Banknote className="h-3.5 w-3.5" />
-                      <span>TUNAI</span>
-                    </div>
-                  ) : (
-                    <BankBrandLogo
-                      code={wallet.provider}
-                      className="h-4 w-auto text-white"
-                      monochrome={false}
-                    />
-                  )}
+                {/* LOGO RESMI BANK: BADGE PUTIH GLOSSY (100% TERLIHAT JELAS!) */}
+                <div className="shrink-0">
+                  <BankCardBadge provider={wallet.provider} />
                 </div>
               </div>
 
-              {/* Saldo Kartu */}
-              <div className="my-5">
-                <p className="text-[10px] text-zinc-400 uppercase tracking-wider font-semibold">
-                  Saldo Kantong
+              {/* Baris Tengah: EMV Chip Emas Realistis + NFC Contactless Wave */}
+              <div className="relative z-10 flex items-center gap-3 my-4">
+                {/* Chip Emas Realistis */}
+                <div className="h-7 w-9 rounded-md bg-gradient-to-tr from-amber-300 via-amber-100 to-amber-400 border border-amber-400/80 shadow-xs relative overflow-hidden flex items-center justify-center">
+                  {/* Chip Internal Circuit Lines */}
+                  <div className="absolute inset-0 border border-amber-600/30 m-0.5 rounded-xs" />
+                  <div className="h-full w-[1px] bg-amber-600/40" />
+                  <div className="w-full h-[1px] bg-amber-600/40 absolute" />
+                </div>
+
+                {/* NFC Wave */}
+                <Wifi className="h-4 w-4 text-white/60 rotate-90" />
+              </div>
+
+              {/* Saldo Kartu Finansial */}
+              <div className="relative z-10 my-1">
+                <p className="text-[10px] text-zinc-300 uppercase tracking-widest font-semibold">
+                  Saldo Aktif
                 </p>
                 <p
-                  className="font-extrabold text-white tracking-tight tabular-nums mt-0.5"
-                  style={{ fontSize: "clamp(1.4rem, 4vw, 1.85rem)" }}
+                  className="font-black text-white tracking-tight tabular-nums mt-0.5 leading-none"
+                  style={{ fontSize: "clamp(1.5rem, 4.5vw, 2rem)" }}
                 >
                   {showBalance ? formatRupiah(wallet.balance) : "••••••••••••"}
                 </p>
               </div>
 
-              {/* Footer Kartu: Nomor Akun & Quick Action */}
-              <div className="pt-3 border-t border-white/10 flex items-center justify-between">
-                <span className="text-[11px] text-zinc-400 font-mono">
-                  {wallet.accountNumber || "Kantong Digital"}
-                </span>
+              {/* Footer Kartu: Nomor Akun, Pemegang, & Tombol Aksi Cepat */}
+              <div className="relative z-10 pt-4 mt-2 border-t border-white/15 flex items-end justify-between gap-2">
+                <div className="space-y-0.5">
+                  <p className="text-xs font-mono tracking-widest text-zinc-300">
+                    {wallet.accountNumber || "•••• •••• •••• 9921"}
+                  </p>
+                  <p className="text-[10px] tracking-wider text-zinc-400 uppercase font-semibold">
+                    {wallet.holderName || defaultHolder}
+                  </p>
+                </div>
 
-                <div className="flex items-center gap-1.5">
+                {/* Tombol Aksi Cepat Interaktif Langsung di Kartu */}
+                <div className="flex items-center gap-1.5 shrink-0">
                   <button
                     type="button"
-                    onClick={() => openTransferFor(wallet)}
-                    title="Pindah saldo ke kantong lain"
-                    className="h-7 px-2.5 rounded-lg bg-white/15 hover:bg-white/25 active:scale-90 text-[11px] font-bold text-white flex items-center gap-1 transition-all cursor-pointer"
+                    onClick={() => {
+                      setSelectedWallet(wallet);
+                      setIsTopUpModalOpen(true);
+                    }}
+                    title="Isi saldo kantong"
+                    className="h-8 px-2.5 rounded-xl bg-white/15 hover:bg-white/25 active:scale-90 text-[11px] font-bold text-white flex items-center gap-1 transition-all cursor-pointer backdrop-blur-md"
                   >
-                    <ArrowLeftRight className="h-3 w-3" />
+                    <PlusCircle className="h-3.5 w-3.5" />
+                    <span>Top Up</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedWallet(wallet);
+                      const other = wallets.find((w) => w.id !== wallet.id);
+                      setTargetWalletId(other ? other.id : "");
+                      setIsTransferModalOpen(true);
+                    }}
+                    title="Pindah saldo ke kantong lain"
+                    className="h-8 px-2.5 rounded-xl bg-white/15 hover:bg-white/25 active:scale-90 text-[11px] font-bold text-white flex items-center gap-1 transition-all cursor-pointer backdrop-blur-md"
+                  >
+                    <ArrowLeftRight className="h-3.5 w-3.5" />
                     <span>Pindah</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => toggleLockWallet(wallet.id, wallet.isLocked)}
+                    title={wallet.isLocked ? "Buka kunci kantong" : "Kunci kantong"}
+                    className="h-8 w-8 rounded-xl bg-white/15 hover:bg-white/25 active:scale-90 text-white flex items-center justify-center transition-all cursor-pointer backdrop-blur-md"
+                  >
+                    {wallet.isLocked ? (
+                      <Lock className="h-3.5 w-3.5 text-amber-300" />
+                    ) : (
+                      <Unlock className="h-3.5 w-3.5 text-zinc-300" />
+                    )}
                   </button>
                 </div>
               </div>
-
-              {/* Visual Decorative Chip Indicator */}
-              {isSavings && (
-                <div className="absolute top-2 right-2 flex items-center gap-1">
-                  <Lock className="h-2.5 w-2.5 text-amber-400/80" />
-                </div>
-              )}
             </div>
           );
         })}
@@ -579,7 +703,7 @@ export function WalletsView({ initialUser: _initialUser }: WalletsViewProps) {
                   Bikin Kantong Baru 🚀
                 </h3>
                 <p className="text-xs text-zinc-500">
-                  Pisahin pos keuanganmu biar disiplin dan rapi.
+                  Pilih bank atau dompet digital resmi untuk kantong baru.
                 </p>
               </div>
               <button
@@ -592,7 +716,7 @@ export function WalletsView({ initialUser: _initialUser }: WalletsViewProps) {
             </div>
 
             <form onSubmit={handleCreateWallet} className="space-y-4">
-              {/* 1. Pilih Bank / Provider Resmi */}
+              {/* 1. Pilih Bank / Provider Resmi dengan Logo Asli */}
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-zinc-800">
                   Pilih Bank / Dompet Resmi
@@ -604,31 +728,24 @@ export function WalletsView({ initialUser: _initialUser }: WalletsViewProps) {
                       <button
                         key={provider.code}
                         type="button"
-                        onClick={() => {
-                          setNewProvider(provider.code);
-                          if (provider.code === "bca") setNewTheme("blue");
-                          else if (provider.code === "jago") setNewTheme("amber");
-                          else if (provider.code === "gopay") setNewTheme("cyan");
-                        }}
+                        onClick={() => setNewProvider(provider.code)}
                         className={cn(
-                          "p-2.5 rounded-2xl border text-left flex flex-col justify-between h-18 transition-all cursor-pointer active:scale-95",
+                          "p-3 rounded-2xl border text-left flex flex-col justify-between h-19 transition-all cursor-pointer active:scale-95",
                           isSelected
-                            ? "border-zinc-950 bg-zinc-950 text-white shadow-sm"
-                            : "border-zinc-200/90 bg-white hover:bg-zinc-50 text-zinc-800"
+                            ? "border-zinc-950 bg-zinc-950 text-white shadow-md ring-2 ring-zinc-950 ring-offset-1"
+                            : "border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-800"
                         )}
                       >
-                        <div className="flex items-center justify-between w-full">
-                          <span className="text-[10px] text-zinc-400 font-medium">
-                            {provider.type}
-                          </span>
-                        </div>
+                        <span className="text-[10px] text-zinc-400 font-semibold">
+                          {provider.label}
+                        </span>
                         <div className="pt-1">
                           {provider.code === "cash" ? (
-                            <span className="text-xs font-bold">💵 Kas Fisik</span>
+                            <span className="text-xs font-black">💵 Kas Fisik</span>
                           ) : (
                             <BankBrandLogo
                               code={provider.code}
-                              className="h-4 w-auto"
+                              className="h-4.5 w-auto"
                               monochrome={isSelected}
                             />
                           )}
@@ -650,7 +767,7 @@ export function WalletsView({ initialUser: _initialUser }: WalletsViewProps) {
                   placeholder="Misal: BCA Jajan Kopi, Tabungan Liburan"
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
-                  className="h-10 w-full px-3 rounded-xl border border-zinc-200 text-xs text-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-950"
+                  className="h-10 w-full px-3 rounded-xl border border-zinc-200 text-xs text-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-950 font-medium"
                 />
               </div>
 
@@ -777,7 +894,7 @@ export function WalletsView({ initialUser: _initialUser }: WalletsViewProps) {
       )}
 
       {/* 6. MODAL PROTOTYPE: OPER DUIT / PINDAH SALDO ANTAR KANTONG */}
-      {isTransferModalOpen && selectedWalletForTransfer && (
+      {isTransferModalOpen && selectedWallet && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-0 sm:p-4 animate-in fade-in duration-150">
           <div className="bg-white w-full max-w-md rounded-t-[32px] sm:rounded-3xl p-6 space-y-5 shadow-2xl">
             <div className="flex items-center justify-between pb-3 border-b border-zinc-100">
@@ -806,13 +923,13 @@ export function WalletsView({ initialUser: _initialUser }: WalletsViewProps) {
                 </p>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="text-base">{selectedWalletForTransfer.emoji}</span>
+                    <span className="text-base">{selectedWallet.emoji}</span>
                     <span className="text-xs font-bold text-zinc-950">
-                      {selectedWalletForTransfer.name}
+                      {selectedWallet.name}
                     </span>
                   </div>
                   <span className="text-xs font-bold text-zinc-600">
-                    Sisa: {formatRupiah(selectedWalletForTransfer.balance)}
+                    Sisa: {formatRupiah(selectedWallet.balance)}
                   </span>
                 </div>
               </div>
@@ -831,7 +948,7 @@ export function WalletsView({ initialUser: _initialUser }: WalletsViewProps) {
                     Pilih kantong tujuan...
                   </option>
                   {wallets
-                    .filter((w) => w.id !== selectedWalletForTransfer.id)
+                    .filter((w) => w.id !== selectedWallet.id)
                     .map((w) => (
                       <option key={w.id} value={w.id}>
                         {w.emoji} {w.name} ({formatRupiah(w.balance)})
@@ -867,6 +984,94 @@ export function WalletsView({ initialUser: _initialUser }: WalletsViewProps) {
                 >
                   <ArrowLeftRight className="h-4 w-4" />
                   <span>Kirim Pindah Saldo Sekarang</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* 7. MODAL PROTOTYPE: TOP UP / ISI SALDO */}
+      {isTopUpModalOpen && selectedWallet && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-0 sm:p-4 animate-in fade-in duration-150">
+          <div className="bg-white w-full max-w-md rounded-t-[32px] sm:rounded-3xl p-6 space-y-5 shadow-2xl">
+            <div className="flex items-center justify-between pb-3 border-b border-zinc-100">
+              <div>
+                <h3 className="text-base font-black text-zinc-950">
+                  Isi Saldo Kantong 💵
+                </h3>
+                <p className="text-xs text-zinc-500">
+                  Simulasi deposit saldo ke {selectedWallet.name}.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsTopUpModalOpen(false)}
+                className="h-8 w-8 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-500 hover:text-zinc-900 flex items-center justify-center cursor-pointer active:scale-90"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleTopUp} className="space-y-4">
+              <div className="p-3.5 rounded-2xl bg-zinc-50 border border-zinc-200/80 space-y-1">
+                <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider">
+                  Tujuan Pengisian
+                </p>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">{selectedWallet.emoji}</span>
+                    <span className="text-xs font-bold text-zinc-950">
+                      {selectedWallet.name}
+                    </span>
+                  </div>
+                  <span className="text-xs font-bold text-zinc-600">
+                    Saldo Saat Ini: {formatRupiah(selectedWallet.balance)}
+                  </span>
+                </div>
+              </div>
+
+              {/* Nominal Top Up */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-zinc-800">
+                  Nominal Tambah Saldo (Rp)
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="Rp 0"
+                  value={topUpAmount}
+                  onChange={(e) => {
+                    const digits = e.target.value.replace(/\D/g, "");
+                    if (!digits) setTopUpAmount("");
+                    else setTopUpAmount(parseInt(digits, 10).toLocaleString("id-ID"));
+                  }}
+                  className="h-10 w-full px-3 rounded-xl border border-zinc-200 text-sm font-bold text-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-950"
+                />
+              </div>
+
+              {/* Quick Nominal Chips */}
+              <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
+                {[100000, 250000, 500000, 1000000, 2000000].map((quick) => (
+                  <button
+                    key={quick}
+                    type="button"
+                    onClick={() => setTopUpAmount(quick.toLocaleString("id-ID"))}
+                    className="px-2.5 py-1.5 rounded-lg bg-zinc-100 hover:bg-zinc-200 text-[11px] font-bold text-zinc-800 transition-all active:scale-95 whitespace-nowrap cursor-pointer"
+                  >
+                    +Rp {(quick / 1000).toLocaleString("id-ID")}rb
+                  </button>
+                ))}
+              </div>
+
+              {/* Submit Top Up */}
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  className="w-full h-11 rounded-2xl bg-zinc-950 hover:bg-zinc-800 text-white text-xs font-bold transition-all active:scale-95 shadow-md flex items-center justify-center gap-1.5 cursor-pointer"
+                >
+                  <TrendingUp className="h-4 w-4" />
+                  <span>Tambahkan ke Saldo</span>
                 </button>
               </div>
             </form>
