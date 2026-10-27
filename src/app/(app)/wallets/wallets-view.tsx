@@ -514,8 +514,8 @@ export function WalletsView({ initialUser }: WalletsViewProps) {
         </div>
       </div>
 
-      {/* 4. Grid Kartu Fisik Mewah ala Apple Card & Bank Jago (KLIMAKS) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4.5">
+      {/* 4. Grid Kartu Fisik Mewah ala Apple Card & Bank Jago (KLIMAKS, Rapi & Lega) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
         {filteredWallets.map((wallet) => {
           const isBca = wallet.provider === "bca";
           const isJago = wallet.provider === "jago";
@@ -553,7 +553,7 @@ export function WalletsView({ initialUser }: WalletsViewProps) {
             <div
               key={wallet.id}
               className={cn(
-                "group relative p-5 sm:p-6 rounded-[28px] border transition-all duration-300 flex flex-col justify-between overflow-hidden active:scale-[0.98]",
+                "group relative p-6 sm:p-7 rounded-[30px] border transition-all duration-300 flex flex-col justify-between overflow-hidden active:scale-[0.98] min-h-[230px]",
                 cardBg
               )}
             >
