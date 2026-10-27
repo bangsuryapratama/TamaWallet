@@ -11,15 +11,15 @@ interface AppShellProps {
 
 export function AppShell({ children }: AppShellProps) {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-white">
       {/* Desktop Sidebar */}
       <Sidebar />
 
       {/* Main Workspace */}
-      <div className="flex flex-col md:pl-64 min-h-screen">
+      <div className="flex flex-col md:pl-60 min-h-screen">
         <TopBar />
         <main className="flex-1 p-4 md:p-8 pb-20 md:pb-8">
-          <div className="mx-auto max-w-7xl">{children}</div>
+          <div className="mx-auto max-w-6xl">{children}</div>
         </main>
       </div>
 

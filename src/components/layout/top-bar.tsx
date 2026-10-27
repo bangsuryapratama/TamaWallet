@@ -3,10 +3,8 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LogIn, LogOut, User as UserIcon } from "lucide-react";
+import { LogIn, LogOut } from "lucide-react";
 import { navigationItems } from "./sidebar";
-import { isSupabaseConfigured } from "@/lib/env";
-import { Badge } from "@/components/ui/badge";
 import { createClient } from "@/lib/supabase/client";
 import { User } from "@supabase/supabase-js";
 
@@ -49,71 +47,40 @@ export function TopBar() {
       (item.href !== "/dashboard" && pathname.startsWith(item.href))
   );
 
-  const supabaseReady = isSupabaseConfigured();
-
   return (
-    <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-border bg-card/80 backdrop-blur-sm px-4 md:px-8">
-      {/* Mobile brand / Desktop breadcrumb */}
+    <header className="sticky top-0 z-20 flex h-14 items-center justify-between border-b border-zinc-200 bg-white px-4 md:px-8">
+      {/* Mobile Title & Desktop Breadcrumb */}
       <div className="flex items-center gap-3">
-        <div className="flex md:hidden items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-primary-foreground font-bold text-xs shadow-sm">
-            T
-          </div>
-          <span className="font-bold tracking-tight text-foreground text-sm">
-            TamaWallet
-          </span>
-        </div>
-
-        <div className="hidden md:flex items-center gap-2 text-sm text-muted-foreground">
-          <span className="font-medium text-foreground">
-            {currentItem?.name || "TamaWallet"}
-          </span>
-          {currentItem?.description && (
-            <>
-              <span className="text-border">/</span>
-              <span className="text-xs text-muted-foreground">
-                {currentItem.description}
-              </span>
-            </>
-          )}
-        </div>
+        <Link href="/dashboard" className="md:hidden font-bold text-sm text-zinc-900">
+          TamaWallet
+        </Link>
+        <span className="hidden md:inline-block text-sm font-medium text-zinc-900">
+          {currentItem?.name || "Dashboard"}
+        </span>
       </div>
 
-      {/* Top right actions: Environment badge & Auth status */}
+      {/* Auth action */}
       <div className="flex items-center gap-3">
-        {supabaseReady ? (
-          <Badge variant="positive" className="hidden sm:inline-flex text-[11px]">
-            Supabase Connected
-          </Badge>
-        ) : (
-          <Badge variant="warning" className="text-[11px]">
-            Supabase: Need Config
-          </Badge>
-        )}
-
         {user ? (
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1.5 rounded-md border border-border bg-background px-2.5 py-1 text-xs">
-              <UserIcon className="h-3.5 w-3.5 text-primary" />
-              <span className="font-medium text-foreground max-w-[120px] truncate">
-                {user.user_metadata?.display_name || user.email?.split("@")[0]}
-              </span>
-            </div>
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-zinc-600 hidden sm:inline">
+              {user.email}
+            </span>
             <button
               onClick={handleSignOut}
-              title="Keluar Sesi"
-              className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-border bg-background text-muted-foreground hover:bg-destructive/10 hover:text-negative hover:border-negative/30 transition-colors"
+              className="text-xs text-zinc-500 hover:text-zinc-900 flex items-center gap-1.5 transition-colors"
             >
               <LogOut className="h-3.5 w-3.5" />
+              <span>Keluar</span>
             </button>
           </div>
         ) : (
           <Link
             href="/login"
-            className="inline-flex items-center gap-1.5 rounded-md border border-border bg-background px-3 py-1.5 text-xs font-medium text-foreground hover:bg-accent transition-colors"
+            className="text-xs font-medium text-zinc-700 hover:text-zinc-900 flex items-center gap-1.5 transition-colors"
           >
-            <LogIn className="h-3.5 w-3.5 text-muted-foreground" />
-            <span>Login</span>
+            <LogIn className="h-3.5 w-3.5" />
+            <span>Masuk</span>
           </Link>
         )}
       </div>

@@ -23,8 +23,8 @@ export function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-card/95 backdrop-blur-sm safe-area-pb">
-      <div className="grid grid-cols-5 h-16">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 border-t border-zinc-200 bg-white">
+      <div className="grid grid-cols-5 h-14">
         {mobileNavItems.map((item) => {
           const Icon = item.icon;
           const isActive =
@@ -36,19 +36,14 @@ export function BottomNav() {
               key={item.href}
               href={item.href}
               className={cn(
-                "inline-flex flex-col items-center justify-center gap-1 transition-colors relative py-1",
+                "inline-flex flex-col items-center justify-center gap-1 transition-colors py-1",
                 isActive
-                  ? "text-primary"
-                  : "text-muted-foreground hover:text-foreground"
+                  ? "text-zinc-900 font-semibold"
+                  : "text-zinc-400 hover:text-zinc-700"
               )}
             >
-              {isActive && (
-                <span className="absolute top-0 h-0.5 w-8 rounded-full bg-primary" />
-              )}
-              <Icon className="h-5 w-5" />
-              <span className="text-[10px] font-medium tracking-tight">
-                {item.name}
-              </span>
+              <Icon className="h-4 w-4" />
+              <span className="text-[10px] tracking-tight">{item.name}</span>
             </Link>
           );
         })}
