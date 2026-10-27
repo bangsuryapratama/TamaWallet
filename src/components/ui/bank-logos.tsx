@@ -15,7 +15,7 @@ export function BcaLogo({ className = "h-6 w-auto", size, monochrome = false, st
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      src="/logos/bca.png"
+      src="/logos/bca.png?v=2"
       alt="Bank Central Asia (BCA)"
       className={className}
       style={{
