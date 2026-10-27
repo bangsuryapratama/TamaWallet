@@ -94,11 +94,12 @@ export function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
+              prefetch={true}
               className={cn(
-                "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all active:scale-[0.98]",
                 isActive
-                  ? "bg-zinc-100 text-zinc-900 font-semibold"
-                  : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900"
+                  ? "bg-zinc-100 text-zinc-950 font-bold shadow-xs"
+                  : "text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900"
               )}
             >
               <Icon className="h-4 w-4" />
