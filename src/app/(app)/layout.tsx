@@ -1,10 +1,21 @@
 import * as React from "react";
 import { AppShell } from "@/components/layout/app-shell";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 
-export default function AppLayout({
+export const dynamic = "force-dynamic";
+
+export default async function AppLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <AppShell>{children}</AppShell>;
+  const supabase = createServerSupabaseClient();
+  let user = null;
+
+  if (supabase) {
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+  }
+
+  return <AppShell initialUser={user}>{children}</AppShell>;
 }

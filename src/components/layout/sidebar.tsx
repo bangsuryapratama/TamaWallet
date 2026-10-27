@@ -4,12 +4,11 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  LayoutDashboard,
-  WalletCards,
+  Home,
+  Wallet,
   ArrowLeftRight,
   Target,
   TrendingUp,
-  LogIn,
   LogOut,
   User as UserIcon,
 } from "lucide-react";
@@ -18,20 +17,37 @@ import { createClient } from "@/lib/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { LogoIcon } from "@/components/ui/logo";
 import { toast } from "sonner";
+import {
+  getCachedUser,
+  setCachedUser,
+  clearCachedUser,
+  CachedUserSummary,
+} from "@/lib/auth-cache";
 
 export const navigationItems = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { name: "Dashboard", href: "/dashboard", icon: Home },
   { name: "Transaksi", href: "/transactions", icon: ArrowLeftRight },
-  { name: "Wallet", href: "/wallets", icon: WalletCards },
+  { name: "Wallet", href: "/wallets", icon: Wallet },
   { name: "Goals", href: "/goals", icon: Target },
   { name: "Insight", href: "/insights", icon: TrendingUp },
   { name: "Profil", href: "/profile", icon: UserIcon },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+  initialUser?: User | null;
+}
+
+export function Sidebar({ initialUser = null }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
-  const [user, setUser] = React.useState<User | null>(null);
+  const [user, setUser] = React.useState<User | null>(initialUser);
+  const [cachedSummary] = React.useState<CachedUserSummary | null>(() => {
+    if (initialUser) {
+      setCachedUser(initialUser);
+      return null;
+    }
+    return getCachedUser();
+  });
   const [isLoggingOut, setIsLoggingOut] = React.useState(false);
   const [optimisticHref, setOptimisticHref] = React.useState<string | null>(null);
 
@@ -46,31 +62,42 @@ export function Sidebar() {
   }, [router]);
 
   React.useEffect(() => {
+    if (initialUser) {
+      setUser(initialUser);
+      setCachedUser(initialUser);
+    }
+
     const supabase = createClient();
     if (!supabase) return;
 
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setUser(user);
+    supabase.auth.getUser().then(({ data: { user: currentUser } }) => {
+      if (currentUser) {
+        setUser(currentUser);
+        setCachedUser(currentUser);
+      }
     });
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
+      const u = session?.user ?? null;
+      setUser(u);
+      setCachedUser(u);
     });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [initialUser]);
 
   const handleSignOut = async () => {
     const supabase = createClient();
-    if (!supabase) return;
-
+    clearCachedUser();
     setIsLoggingOut(true);
     try {
-      await supabase.auth.signOut();
+      if (supabase) {
+        await supabase.auth.signOut();
+      }
       toast.success("Sesi berakhir", {
         description: "Anda telah berhasil keluar dari akun.",
       });
@@ -80,6 +107,15 @@ export function Sidebar() {
       setIsLoggingOut(false);
     }
   };
+
+  const displayEmail =
+    user?.email || cachedSummary?.email || "";
+  const displayName =
+    user?.user_metadata?.full_name ||
+    user?.user_metadata?.display_name ||
+    cachedSummary?.displayName ||
+    displayEmail.split("@")[0] ||
+    "User";
 
   return (
     <aside className="hidden md:flex md:w-60 md:flex-col md:fixed md:inset-y-0 z-30 border-r border-zinc-200 bg-white">
@@ -119,42 +155,36 @@ export function Sidebar() {
                   : "text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900"
               )}
             >
-              <Icon className="h-4 w-4" />
+              <Icon className="h-4 w-4 stroke-[1.8]" />
               <span>{item.name}</span>
             </Link>
           );
         })}
       </nav>
 
-      {/* User Section */}
+      {/* User Section (No "Masuk" flash) */}
       <div className="border-t border-zinc-100 p-3">
-        {user ? (
-          <div className="flex items-center justify-between p-2 rounded-md hover:bg-zinc-50 transition-colors">
+        {displayEmail || user ? (
+          <div className="flex items-center justify-between p-2 rounded-xl hover:bg-zinc-50 transition-colors">
             <div className="flex flex-col min-w-0 pr-2">
-              <span className="text-xs font-medium text-zinc-900 truncate">
-                {user.user_metadata?.display_name || user.email?.split("@")[0]}
+              <span className="text-xs font-semibold text-zinc-900 truncate">
+                {displayName}
               </span>
               <span className="text-[11px] text-zinc-400 truncate">
-                {user.email}
+                {displayEmail}
               </span>
             </div>
             <button
               onClick={handleSignOut}
               disabled={isLoggingOut}
               title="Keluar"
-              className="text-zinc-400 hover:text-zinc-900 p-1 rounded"
+              className="text-zinc-400 hover:text-zinc-900 p-1.5 rounded-lg hover:bg-zinc-100 active:scale-90 transition-all cursor-pointer"
             >
-              <LogOut className="h-4 w-4" />
+              <LogOut className="h-4 w-4 stroke-[1.8]" />
             </button>
           </div>
         ) : (
-          <Link
-            href="/login"
-            className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50 rounded-md transition-colors"
-          >
-            <LogIn className="h-4 w-4" />
-            <span>Masuk</span>
-          </Link>
+          <div className="h-10 rounded-xl bg-zinc-100 animate-pulse" />
         )}
       </div>
     </aside>

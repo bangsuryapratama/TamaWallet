@@ -4,8 +4,8 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  LayoutGrid,
-  WalletCards,
+  Home,
+  Wallet,
   ArrowLeftRight,
   User,
   Plus,
@@ -24,8 +24,8 @@ export function BottomNav() {
   const currentPath = optimisticPath || pathname;
 
   const tabs = [
-    { name: "Home", href: "/dashboard", icon: LayoutGrid, isCenter: false },
-    { name: "Wallet", href: "/wallets", icon: WalletCards, isCenter: false },
+    { name: "Home", href: "/dashboard", icon: Home, isCenter: false },
+    { name: "Wallet", href: "/wallets", icon: Wallet, isCenter: false },
     { name: "Catat", href: "/transactions", icon: Plus, isCenter: true },
     { name: "Riwayat", href: "/transactions", icon: ArrowLeftRight, isCenter: false },
     { name: "Profil", href: "/profile", icon: User, isCenter: false },
@@ -64,7 +64,7 @@ export function BottomNav() {
             );
           }
 
-          // 4 Tab Navigasi Presisi
+          // 4 Tab Navigasi Presisi ala iOS SF Symbols
           return (
             <Link
               key={tab.name + idx}
@@ -72,17 +72,14 @@ export function BottomNav() {
               prefetch={true}
               onPointerDown={() => setOptimisticPath(tab.href)}
               onMouseEnter={() => router.prefetch(tab.href)}
-              className={cn(
-                "flex flex-col items-center justify-center h-12 rounded-2xl active:scale-75 transition-all duration-150 cursor-pointer touch-manipulation gap-0.5",
-                isActive
-                  ? "bg-zinc-100 text-zinc-950 font-bold"
-                  : "text-zinc-400 hover:text-zinc-700 font-medium"
-              )}
+              className="flex flex-col items-center justify-center h-12 rounded-2xl active:scale-75 transition-all duration-150 cursor-pointer touch-manipulation gap-0.5"
             >
               <Icon
                 className={cn(
                   "h-5 w-5 transition-transform",
-                  isActive ? "stroke-[2.4] scale-105" : "stroke-[1.8]"
+                  isActive
+                    ? "stroke-[2.3] text-zinc-950 scale-105"
+                    : "stroke-[1.8] text-zinc-400 hover:text-zinc-700"
                 )}
               />
               <span

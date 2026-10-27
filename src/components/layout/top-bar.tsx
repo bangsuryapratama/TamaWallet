@@ -3,42 +3,73 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LogIn, LogOut } from "lucide-react";
+import { LogOut, User as UserIcon } from "lucide-react";
 import { navigationItems } from "./sidebar";
 import { createClient } from "@/lib/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { LogoIcon } from "@/components/ui/logo";
 import { toast } from "sonner";
+import {
+  getCachedUser,
+  setCachedUser,
+  clearCachedUser,
+  CachedUserSummary,
+} from "@/lib/auth-cache";
 
-export function TopBar() {
+interface TopBarProps {
+  initialUser?: User | null;
+}
+
+export function TopBar({ initialUser = null }: TopBarProps) {
   const pathname = usePathname();
   const router = useRouter();
-  const [user, setUser] = React.useState<User | null>(null);
+
+  // Inisialisasi instan dari SSR atau local cache (0ms delay, anti-flicker 'Masuk')
+  const [user, setUser] = React.useState<User | null>(initialUser);
+  const [cachedSummary] = React.useState<CachedUserSummary | null>(() => {
+    if (initialUser) {
+      setCachedUser(initialUser);
+      return null;
+    }
+    return getCachedUser();
+  });
 
   React.useEffect(() => {
+    if (initialUser) {
+      setUser(initialUser);
+      setCachedUser(initialUser);
+    }
+
     const supabase = createClient();
     if (!supabase) return;
 
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setUser(user);
+    // Background validation
+    supabase.auth.getUser().then(({ data: { user: currentUser } }) => {
+      if (currentUser) {
+        setUser(currentUser);
+        setCachedUser(currentUser);
+      }
     });
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
+      const u = session?.user ?? null;
+      setUser(u);
+      setCachedUser(u);
     });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [initialUser]);
 
   const handleSignOut = async () => {
     const supabase = createClient();
-    if (!supabase) return;
-
-    await supabase.auth.signOut();
+    clearCachedUser();
+    if (supabase) {
+      await supabase.auth.signOut();
+    }
     toast.success("Sesi berakhir", {
       description: "Anda telah berhasil keluar dari akun.",
     });
@@ -51,6 +82,16 @@ export function TopBar() {
       pathname === item.href ||
       (item.href !== "/dashboard" && pathname.startsWith(item.href))
   );
+
+  const displayEmail =
+    user?.email || cachedSummary?.email || "";
+  const displayName =
+    user?.user_metadata?.full_name ||
+    user?.user_metadata?.display_name ||
+    cachedSummary?.displayName ||
+    displayEmail.split("@")[0] ||
+    "User";
+  const initial = displayName.charAt(0).toUpperCase();
 
   return (
     <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-zinc-100 bg-white/80 backdrop-blur-xl px-4 md:px-8">
@@ -75,29 +116,34 @@ export function TopBar() {
         </span>
       </div>
 
-      {/* Auth action */}
-      <div className="flex items-center gap-3">
-        {user ? (
-          <div className="flex items-center gap-2.5">
-            <span className="text-xs text-zinc-500 hidden sm:inline-block max-w-[160px] truncate font-semibold">
-              {user.email}
+      {/* Profil & Auth Action (iPhone-style minimalist) */}
+      <div className="flex items-center gap-2 sm:gap-3">
+        {displayEmail || user ? (
+          <div className="flex items-center gap-2 sm:gap-2.5">
+            {/* Apple SF Avatar Icon */}
+            <div
+              title={displayName}
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-100 border border-zinc-200/80 text-zinc-900 font-bold text-xs select-none"
+            >
+              {initial || <UserIcon className="h-3.5 w-3.5 stroke-[1.8]" />}
+            </div>
+
+            <span className="text-xs text-zinc-600 hidden sm:inline-block max-w-[140px] truncate font-medium">
+              {displayName}
             </span>
+
             <button
               onClick={handleSignOut}
-              className="h-8.5 px-3.5 rounded-full border border-zinc-200/90 bg-zinc-50 hover:bg-zinc-100 text-zinc-800 text-xs font-bold flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer shadow-2xs"
+              title="Keluar dari akun"
+              className="h-8 px-3 rounded-full border border-zinc-200/90 bg-zinc-50 hover:bg-zinc-100 text-zinc-800 text-xs font-semibold flex items-center gap-1.5 transition-all active:scale-90 cursor-pointer shadow-2xs"
             >
-              <LogOut className="h-3.5 w-3.5 text-zinc-500" />
-              <span>Keluar</span>
+              <LogOut className="h-3.5 w-3.5 text-zinc-500 stroke-[1.8]" />
+              <span className="hidden xs:inline">Keluar</span>
             </button>
           </div>
         ) : (
-          <Link
-            href="/login"
-            className="h-8.5 px-4 rounded-full bg-zinc-950 hover:bg-zinc-800 text-white text-xs font-bold flex items-center gap-1.5 transition-all active:scale-95 shadow-xs"
-          >
-            <LogIn className="h-3.5 w-3.5" />
-            <span>Masuk</span>
-          </Link>
+          /* Subtle skeleton placeholder selagi sync (TIDAK PERNAH render 'Masuk') */
+          <div className="h-8 w-20 rounded-full bg-zinc-100 animate-pulse" />
         )}
       </div>
     </header>

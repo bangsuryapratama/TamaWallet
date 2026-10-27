@@ -8,24 +8,31 @@ import {
   ArrowUpRight,
   ArrowDownLeft,
   ArrowLeftRight,
-  WalletCards,
+  Wallet,
   Target,
   Plus,
   ChevronRight,
-  Building2,
+  Landmark,
   Smartphone,
   Banknote,
-  Receipt,
+  ReceiptText,
 } from "lucide-react";
 import { User } from "@supabase/supabase-js";
 import { toast } from "sonner";
+import {
+  getCachedShowBalance,
+  setCachedShowBalance,
+} from "@/lib/auth-cache";
 
 interface DashboardViewProps {
   initialUser: User | null;
 }
 
 export function DashboardView({ initialUser }: DashboardViewProps) {
-  const [showBalance, setShowBalance] = React.useState(true);
+  // Inisialisasi privasi saldo dari local storage cache
+  const [showBalance, setShowBalance] = React.useState<boolean>(() => {
+    return getCachedShowBalance();
+  });
 
   // Greeting dinamis berbasis jam lokal
   const greeting = React.useMemo(() => {
@@ -48,6 +55,7 @@ export function DashboardView({ initialUser }: DashboardViewProps) {
   const toggleBalance = () => {
     const nextState = !showBalance;
     setShowBalance(nextState);
+    setCachedShowBalance(nextState);
     if (!nextState) {
       toast("Saldo disembunyikan", { duration: 1500 });
     } else {
@@ -215,7 +223,7 @@ export function DashboardView({ initialUser }: DashboardViewProps) {
               className="group flex flex-col items-center p-3 sm:p-4 rounded-2xl border border-zinc-200/90 bg-white hover:bg-zinc-50 active:scale-90 transition-all text-center shadow-2xs cursor-pointer"
             >
               <div className="flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-xl bg-zinc-100 group-hover:bg-zinc-950 group-hover:text-white text-zinc-900 transition-colors">
-                <WalletCards className="h-5 w-5 stroke-[2.2]" />
+                <Wallet className="h-5 w-5 stroke-[1.8]" />
               </div>
               <span className="text-xs font-bold text-zinc-900 mt-2">
                 Dompet
@@ -249,7 +257,7 @@ export function DashboardView({ initialUser }: DashboardViewProps) {
 
             <div className="p-7 rounded-2xl border border-zinc-200/90 bg-white shadow-2xs flex flex-col items-center justify-center text-center space-y-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-zinc-100 text-zinc-400">
-                <Receipt className="h-5 w-5 stroke-[1.8]" />
+                <ReceiptText className="h-5 w-5 stroke-[1.8]" />
               </div>
               <div className="max-w-xs space-y-1">
                 <p className="text-sm font-bold text-zinc-900">
@@ -298,7 +306,7 @@ export function DashboardView({ initialUser }: DashboardViewProps) {
               <div className="p-4 rounded-2xl border border-zinc-200/90 bg-white shadow-2xs flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-zinc-100 text-zinc-900">
-                    <Building2 className="h-4.5 w-4.5" />
+                    <Landmark className="h-4.5 w-4.5 stroke-[1.8]" />
                   </div>
                   <div>
                     <p className="text-xs font-bold text-zinc-900">Rekening Bank</p>
@@ -313,7 +321,7 @@ export function DashboardView({ initialUser }: DashboardViewProps) {
               <div className="p-4 rounded-2xl border border-zinc-200/90 bg-white shadow-2xs flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-zinc-100 text-zinc-900">
-                    <Smartphone className="h-4.5 w-4.5" />
+                    <Smartphone className="h-4.5 w-4.5 stroke-[1.8]" />
                   </div>
                   <div>
                     <p className="text-xs font-bold text-zinc-900">Dompet Digital</p>
@@ -328,7 +336,7 @@ export function DashboardView({ initialUser }: DashboardViewProps) {
               <div className="p-4 rounded-2xl border border-zinc-200/90 bg-white shadow-2xs flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-zinc-100 text-zinc-900">
-                    <Banknote className="h-4.5 w-4.5" />
+                    <Banknote className="h-4.5 w-4.5 stroke-[1.8]" />
                   </div>
                   <div>
                     <p className="text-xs font-bold text-zinc-900">Kas Tunai</p>
