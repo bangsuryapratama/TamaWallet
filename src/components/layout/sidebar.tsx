@@ -27,7 +27,7 @@ import {
 export const navigationItems = [
   { name: "Dashboard", href: "/dashboard", icon: Home },
   { name: "Transaksi", href: "/transactions", icon: ArrowLeftRight },
-  { name: "Wallet", href: "/wallets", icon: Wallet },
+  { name: "Kantong", href: "/wallets", icon: Wallet },
   { name: "Goals", href: "/goals", icon: Target },
   { name: "Insight", href: "/insights", icon: TrendingUp },
   { name: "Profil", href: "/profile", icon: UserIcon },

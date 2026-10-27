@@ -25,7 +25,7 @@ export function BottomNav() {
 
   const tabs = [
     { name: "Home", href: "/dashboard", icon: Home, isCenter: false },
-    { name: "Wallet", href: "/wallets", icon: Wallet, isCenter: false },
+    { name: "Kantong", href: "/wallets", icon: Wallet, isCenter: false },
     { name: "Catat", href: "/transactions", icon: Plus, isCenter: true },
     { name: "Riwayat", href: "/transactions", icon: ArrowLeftRight, isCenter: false },
     { name: "Profil", href: "/profile", icon: User, isCenter: false },
