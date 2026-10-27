@@ -23,8 +23,8 @@ export function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 border-t border-zinc-200 bg-white">
-      <div className="grid grid-cols-5 h-14">
+    <nav className="md:hidden fixed bottom-5 inset-x-3 max-w-[400px] mx-auto z-40">
+      <div className="bg-white/90 backdrop-blur-2xl border border-zinc-200/90 rounded-[26px] shadow-[0_10px_35px_-5px_rgba(0,0,0,0.12),0_2px_6px_rgba(0,0,0,0.04)] px-1.5 py-1.5 grid grid-cols-5 h-[64px] items-center">
         {mobileNavItems.map((item) => {
           const Icon = item.icon;
           const isActive =
@@ -36,14 +36,25 @@ export function BottomNav() {
               key={item.href}
               href={item.href}
               className={cn(
-                "inline-flex flex-col items-center justify-center gap-1 transition-colors py-1",
+                "flex flex-col items-center justify-center gap-0.5 py-1 rounded-2xl transition-all select-none active:scale-95",
                 isActive
-                  ? "text-zinc-900 font-semibold"
-                  : "text-zinc-400 hover:text-zinc-700"
+                  ? "text-zinc-950 font-bold"
+                  : "text-zinc-400 hover:text-zinc-600 font-medium"
               )}
             >
-              <Icon className="h-4 w-4" />
-              <span className="text-[10px] tracking-tight">{item.name}</span>
+              <div
+                className={cn(
+                  "flex items-center justify-center w-10 h-7 rounded-full transition-all",
+                  isActive
+                    ? "bg-zinc-950 text-white shadow-sm"
+                    : "text-zinc-400"
+                )}
+              >
+                <Icon className="h-4 w-4" />
+              </div>
+              <span className="text-[10px] tracking-tight leading-none">
+                {item.name}
+              </span>
             </Link>
           );
         })}
