@@ -50,9 +50,12 @@
 
   * {
     @apply border-border;
+    -webkit-tap-highlight-color: transparent;
   }
 
+  html,
   body {
+    touch-action: manipulation;
     @apply bg-background text-foreground antialiased selection:bg-zinc-900 selection:text-white min-h-screen flex flex-col font-sans;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }

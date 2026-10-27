@@ -31,6 +31,17 @@ export function Sidebar() {
   const router = useRouter();
   const [user, setUser] = React.useState<User | null>(null);
   const [isLoggingOut, setIsLoggingOut] = React.useState(false);
+  const [optimisticHref, setOptimisticHref] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    setOptimisticHref(null);
+  }, [pathname]);
+
+  React.useEffect(() => {
+    navigationItems.forEach((item) => {
+      router.prefetch(item.href);
+    });
+  }, [router]);
 
   React.useEffect(() => {
     const supabase = createClient();
@@ -86,15 +97,19 @@ export function Sidebar() {
       <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
         {navigationItems.map((item) => {
           const Icon = item.icon;
-          const isActive =
+          const currentActive =
             pathname === item.href ||
             (item.href !== "/dashboard" && pathname.startsWith(item.href));
+          const isActive =
+            optimisticHref !== null ? optimisticHref === item.href : currentActive;
 
           return (
             <Link
               key={item.href}
               href={item.href}
               prefetch={true}
+              onPointerDown={() => setOptimisticHref(item.href)}
+              onMouseEnter={() => router.prefetch(item.href)}
               className={cn(
                 "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all active:scale-[0.98]",
                 isActive
