@@ -318,16 +318,6 @@ function LoginForm() {
           )}
         </div>
       </div>
-
-      {/* Discrete Link to Dashboard */}
-      <div className="text-center mt-6">
-        <Link
-          href="/dashboard"
-          className="text-xs font-medium text-zinc-400 hover:text-zinc-700 transition-colors"
-        >
-          Lihat pratinjau dashboard &rarr;
-        </Link>
-      </div>
     </div>
   );
 }
