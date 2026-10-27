@@ -23,14 +23,12 @@ export function BottomNav() {
 
   const currentPath = optimisticPath || pathname;
 
-  const leftItems = [
-    { name: "Home", href: "/dashboard", icon: LayoutGrid },
-    { name: "Wallet", href: "/wallets", icon: WalletCards },
-  ];
-
-  const rightItems = [
-    { name: "Riwayat", href: "/transactions", icon: ArrowLeftRight },
-    { name: "Profil", href: "/profile", icon: User },
+  const tabs = [
+    { name: "Home", href: "/dashboard", icon: LayoutGrid, isCenter: false },
+    { name: "Wallet", href: "/wallets", icon: WalletCards, isCenter: false },
+    { name: "Catat", href: "/transactions", icon: Plus, isCenter: true },
+    { name: "Riwayat", href: "/transactions", icon: ArrowLeftRight, isCenter: false },
+    { name: "Profil", href: "/profile", icon: User, isCenter: false },
   ];
 
   React.useEffect(() => {
@@ -40,107 +38,64 @@ export function BottomNav() {
   }, [router]);
 
   return (
-    <nav className="md:hidden fixed bottom-6 inset-x-4 max-w-[340px] mx-auto z-40 touch-manipulation pointer-events-none">
-      {/* Floating Island Dock (Benar-benar Mengambang di Udara) */}
-      <div className="pointer-events-auto relative bg-white/85 backdrop-blur-2xl border border-white/90 rounded-full shadow-[0_20px_45px_rgba(0,0,0,0.16),0_2px_8px_rgba(0,0,0,0.04)] px-3 py-1.5 h-[66px] flex items-center justify-between">
-        {/* 2 Tab Kiri: Home & Wallet */}
-        <div className="flex items-center gap-1">
-          {leftItems.map((item) => {
-            const Icon = item.icon;
-            const isActive =
-              currentPath === item.href ||
-              (item.href !== "/dashboard" && currentPath.startsWith(item.href));
+    <nav className="md:hidden fixed bottom-6 inset-x-0 mx-auto w-[335px] z-40 touch-manipulation pointer-events-none select-none">
+      {/* Symmetrical Tactile Floating Glass Dock */}
+      <div className="pointer-events-auto relative bg-white/85 backdrop-blur-3xl saturate-180 border border-zinc-200/80 rounded-[30px] shadow-[0_16px_45px_-6px_rgba(0,0,0,0.18),0_4px_12px_rgba(0,0,0,0.05)] px-2 h-[68px] grid grid-cols-5 items-center">
+        {tabs.map((tab, idx) => {
+          const Icon = tab.icon;
+          const isActive =
+            currentPath === tab.href ||
+            (tab.href !== "/dashboard" && currentPath.startsWith(tab.href));
 
+          // Tombol Tengah '+' (Pusat Aksi Cepat dengan Spring Bounce & Glow)
+          if (tab.isCenter) {
             return (
-              <Link
-                key={item.href}
-                href={item.href}
-                prefetch={true}
-                onPointerDown={() => setOptimisticPath(item.href)}
-                onMouseEnter={() => router.prefetch(item.href)}
+              <div key="center-action" className="flex items-center justify-center">
+                <Link
+                  href="/transactions"
+                  prefetch={true}
+                  onPointerDown={() => setOptimisticPath("/transactions")}
+                  title="Catat Cuan / Jajan"
+                  className="flex h-12 w-12 items-center justify-center rounded-2xl bg-zinc-950 text-white shadow-[0_8px_20px_-2px_rgba(0,0,0,0.4)] active:scale-75 transition-all duration-150 cursor-pointer touch-manipulation hover:bg-zinc-800"
+                >
+                  <Plus className="h-6 w-6 stroke-[2.8]" />
+                </Link>
+              </div>
+            );
+          }
+
+          // 4 Tab Navigasi Presisi
+          return (
+            <Link
+              key={tab.name + idx}
+              href={tab.href}
+              prefetch={true}
+              onPointerDown={() => setOptimisticPath(tab.href)}
+              onMouseEnter={() => router.prefetch(tab.href)}
+              className={cn(
+                "flex flex-col items-center justify-center h-12 rounded-2xl active:scale-75 transition-all duration-150 cursor-pointer touch-manipulation gap-0.5",
+                isActive
+                  ? "bg-zinc-100 text-zinc-950 font-bold"
+                  : "text-zinc-400 hover:text-zinc-700 font-medium"
+              )}
+            >
+              <Icon
                 className={cn(
-                  "flex flex-col items-center justify-center w-12 py-1 rounded-2xl active:scale-85 transition-all select-none cursor-pointer touch-manipulation",
-                  isActive
-                    ? "text-zinc-950 font-bold"
-                    : "text-zinc-400 hover:text-zinc-700"
+                  "h-5 w-5 transition-transform",
+                  isActive ? "stroke-[2.4] scale-105" : "stroke-[1.8]"
+                )}
+              />
+              <span
+                className={cn(
+                  "text-[9px] tracking-tight leading-none transition-colors",
+                  isActive ? "text-zinc-950 font-bold" : "text-zinc-400 font-medium"
                 )}
               >
-                <div
-                  className={cn(
-                    "flex items-center justify-center w-8 h-8 rounded-full transition-colors",
-                    isActive ? "bg-zinc-950 text-white shadow-xs" : "text-zinc-400"
-                  )}
-                >
-                  <Icon className={cn("h-4.5 w-4.5", isActive ? "stroke-[2.4]" : "stroke-[1.8]")} />
-                </div>
-                <span
-                  className={cn(
-                    "text-[9px] tracking-tight mt-0.5 leading-none transition-colors",
-                    isActive ? "text-zinc-950 font-bold" : "text-zinc-400 font-medium"
-                  )}
-                >
-                  {item.name}
-                </span>
-              </Link>
-            );
-          })}
-        </div>
-
-        {/* Tombol Tengah Elevated '+' (Melayang Menonjol di Tengah) */}
-        <div className="relative -mt-6 mx-1">
-          <Link
-            href="/transactions"
-            prefetch={true}
-            onPointerDown={() => setOptimisticPath("/transactions")}
-            title="Catat Transaksi Baru"
-            className="flex h-13 w-13 items-center justify-center rounded-full bg-zinc-950 text-white shadow-[0_10px_24px_rgba(0,0,0,0.35)] border-[3.5px] border-white active:scale-85 transition-transform duration-150 cursor-pointer touch-manipulation select-none"
-          >
-            <Plus className="h-6 w-6 stroke-[2.8]" />
-          </Link>
-        </div>
-
-        {/* 2 Tab Kanan: Riwayat & Profil */}
-        <div className="flex items-center gap-1">
-          {rightItems.map((item) => {
-            const Icon = item.icon;
-            const isActive =
-              currentPath === item.href ||
-              (item.href !== "/dashboard" && currentPath.startsWith(item.href));
-
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                prefetch={true}
-                onPointerDown={() => setOptimisticPath(item.href)}
-                onMouseEnter={() => router.prefetch(item.href)}
-                className={cn(
-                  "flex flex-col items-center justify-center w-12 py-1 rounded-2xl active:scale-85 transition-all select-none cursor-pointer touch-manipulation",
-                  isActive
-                    ? "text-zinc-950 font-bold"
-                    : "text-zinc-400 hover:text-zinc-700"
-                )}
-              >
-                <div
-                  className={cn(
-                    "flex items-center justify-center w-8 h-8 rounded-full transition-colors",
-                    isActive ? "bg-zinc-950 text-white shadow-xs" : "text-zinc-400"
-                  )}
-                >
-                  <Icon className={cn("h-4.5 w-4.5", isActive ? "stroke-[2.4]" : "stroke-[1.8]")} />
-                </div>
-                <span
-                  className={cn(
-                    "text-[9px] tracking-tight mt-0.5 leading-none transition-colors",
-                    isActive ? "text-zinc-950 font-bold" : "text-zinc-400 font-medium"
-                  )}
-                >
-                  {item.name}
-                </span>
-              </Link>
-            );
-          })}
-        </div>
+                {tab.name}
+              </span>
+            </Link>
+          );
+        })}
       </div>
     </nav>
   );
