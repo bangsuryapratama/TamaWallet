@@ -163,32 +163,24 @@ export function BniLogo({ className = "h-6 w-auto", size, monochrome = false, ..
 
 /**
  * Logo Resmi GoPay
+ * Menggunakan asset logo resmi GoPay yang 100% otentik
  */
-export function GopayLogo({ className = "h-6 w-auto", size, monochrome = false, ...props }: BankLogoProps) {
-  const primaryColor = monochrome ? "currentColor" : "#00AED6";
+export function GopayLogo({ className = "h-6 w-auto", size, monochrome = false, style }: BankLogoProps) {
   return (
-    <svg
-      viewBox="0 0 105 32"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src="/logos/gopay.png?v=2"
+      alt="GoPay"
       className={className}
-      style={size ? { height: size, width: "auto" } : undefined}
-      {...props}
-    >
-      <circle cx="15" cy="16" r="13" fill={primaryColor} />
-      <circle cx="15" cy="16" r="5" fill="#FFFFFF" />
-      <text
-        x="33"
-        y="24"
-        fill={monochrome ? "currentColor" : "#1A202C"}
-        fontFamily="-apple-system, BlinkMacSystemFont, sans-serif"
-        fontWeight="800"
-        fontSize="21"
-        letterSpacing="-0.5"
-      >
-        gopay
-      </text>
-    </svg>
+      style={{
+        height: size ? `${size}px` : undefined,
+        width: "auto",
+        objectFit: "contain",
+        filter: monochrome ? "brightness(0) invert(1)" : undefined,
+        ...style,
+      }}
+      loading="eager"
+    />
   );
 }
 
