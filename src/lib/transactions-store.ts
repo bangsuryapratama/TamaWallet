@@ -180,3 +180,65 @@ export function formatRupiah(amount: number): string {
     maximumFractionDigits: 0,
   }).format(amount);
 }
+
+export const DEFAULT_WALLETS_SEED = [
+  {
+    id: "wallet-bca-1",
+    name: "BCA Tahapan Prioritas",
+    provider: "bca",
+    category: "spendable",
+    emoji: "💳",
+    balance: 8750000,
+    accountNumber: "5241 •••• •••• 8912",
+    holderName: "SURYA PRATAMA",
+    isLocked: false,
+    createdAt: Date.now() - 30 * 24 * 60 * 60 * 1000,
+  },
+  {
+    id: "wallet-jago-1",
+    name: "Jago Dana Darurat Santai",
+    provider: "jago",
+    category: "savings",
+    emoji: "🎯",
+    balance: 15000000,
+    accountNumber: "1029 •••• •••• 4410",
+    holderName: "SURYA PRATAMA",
+    isLocked: true,
+    createdAt: Date.now() - 25 * 24 * 60 * 60 * 1000,
+  },
+  {
+    id: "wallet-gopay-1",
+    name: "GoPay Jajan & Kopi",
+    provider: "gopay",
+    category: "spendable",
+    emoji: "☕",
+    balance: 450000,
+    accountNumber: "0812 •••• 8992",
+    holderName: "SURYA PRATAMA",
+    isLocked: false,
+    createdAt: Date.now() - 20 * 24 * 60 * 60 * 1000,
+  },
+  {
+    id: "wallet-cash-1",
+    name: "Kas Tunai di Dompet",
+    provider: "cash",
+    category: "spendable",
+    emoji: "💵",
+    balance: 300000,
+    accountNumber: "Uang Fisik Saku",
+    holderName: "SURYA PRATAMA",
+    isLocked: false,
+    createdAt: Date.now() - 10 * 24 * 60 * 60 * 1000,
+  },
+];
+
+export function resetPrototypeData() {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(WALLETS_STORAGE_KEY, JSON.stringify(DEFAULT_WALLETS_SEED));
+    localStorage.setItem(TRANSACTIONS_STORAGE_KEY, JSON.stringify(DEFAULT_TRANSACTIONS));
+    window.dispatchEvent(new CustomEvent("tamawallet:tx-updated"));
+  } catch {
+    // ignore
+  }
+}

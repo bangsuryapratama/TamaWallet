@@ -38,7 +38,7 @@ export interface PocketWallet {
   createdAt: number;
 }
 
-const DEFAULT_WALLETS: PocketWallet[] = [
+export const DEFAULT_WALLETS: PocketWallet[] = [
   {
     id: "wallet-bca-1",
     name: "BCA Tahapan Prioritas",
@@ -126,6 +126,14 @@ export function WalletsView({ initialUser }: WalletsViewProps) {
   const [showBalance, setShowBalance] = React.useState<boolean>(() => getCachedShowBalance());
   const [searchQuery, setSearchQuery] = React.useState("");
 
+  React.useEffect(() => {
+    const handleVis = () => {
+      setShowBalance(getCachedShowBalance());
+    };
+    window.addEventListener("tamawallet:balance-visibility", handleVis);
+    return () => window.removeEventListener("tamawallet:balance-visibility", handleVis);
+  }, []);
+
   // Modals state
   const [isAddModalOpen, setIsAddModalOpen] = React.useState(false);
   const [isTransferModalOpen, setIsTransferModalOpen] = React.useState(false);
@@ -162,6 +170,7 @@ export function WalletsView({ initialUser }: WalletsViewProps) {
     const next = !showBalance;
     setShowBalance(next);
     setCachedShowBalance(next);
+    window.dispatchEvent(new CustomEvent("tamawallet:balance-visibility"));
     if (!next) {
       toast("Saldo disembunyikan", { duration: 1500 });
     } else {

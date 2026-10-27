@@ -37,6 +37,14 @@ export function DashboardView({ initialUser }: DashboardViewProps) {
     return getCachedShowBalance();
   });
 
+  React.useEffect(() => {
+    const handleVis = () => {
+      setShowBalance(getCachedShowBalance());
+    };
+    window.addEventListener("tamawallet:balance-visibility", handleVis);
+    return () => window.removeEventListener("tamawallet:balance-visibility", handleVis);
+  }, []);
+
   // 3 Mode Saldo: Siap Pakai, Tabungan & Kantong Khusus, Total Aset
   const [balanceMode, setBalanceMode] = React.useState<BalanceMode>("spendable");
 
@@ -87,6 +95,7 @@ export function DashboardView({ initialUser }: DashboardViewProps) {
     const nextState = !showBalance;
     setShowBalance(nextState);
     setCachedShowBalance(nextState);
+    window.dispatchEvent(new CustomEvent("tamawallet:balance-visibility"));
     if (!nextState) {
       toast("Saldo disembunyikan", { duration: 1500 });
     } else {
