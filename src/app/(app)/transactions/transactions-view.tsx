@@ -347,36 +347,32 @@ export function TransactionsView({ initialUser: _initialUser }: TransactionsView
             </div>
           </div>
 
-          {/* Dual Split Cards: Pemasukan vs Pengeluaran (Teks Rapi & Tidak Patah Dua Baris) */}
-          <div className="grid grid-cols-2 gap-2.5 pt-0.5">
+          {/* Dual Split Cards: Pemasukan vs Pengeluaran (TIDAK BERTUMPUK / BERDEMPET) */}
+          <div className="grid grid-cols-2 gap-3 pt-1">
             {/* Masuk Card */}
-            <div className="p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-between">
-              <div>
-                <span className="text-[10px] font-bold text-emerald-300 uppercase tracking-wider block">
-                  Masuk 💰
-                </span>
-                <p className="text-sm sm:text-base font-black text-emerald-400 tabular-nums mt-0.5 tracking-tight truncate">
-                  +{formatRupiah(summary.income)}
-                </p>
-              </div>
-              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-300">
+            <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex flex-col justify-between">
+              <div className="flex items-center gap-1.5 text-emerald-300">
                 <ArrowDownLeft className="h-3.5 w-3.5 stroke-[2.5]" />
+                <span className="text-[10px] font-bold uppercase tracking-wider">
+                  Masuk (Cuan)
+                </span>
               </div>
+              <p className="text-sm sm:text-base font-black text-emerald-400 tabular-nums mt-1.5 tracking-tight truncate">
+                +{formatRupiah(summary.income)}
+              </p>
             </div>
 
             {/* Keluar Card */}
-            <div className="p-3 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-between">
-              <div>
-                <span className="text-[10px] font-bold text-rose-300 uppercase tracking-wider block">
-                  Keluar 💸
-                </span>
-                <p className="text-sm sm:text-base font-black text-rose-300 tabular-nums mt-0.5 tracking-tight truncate">
-                  -{formatRupiah(summary.expense)}
-                </p>
-              </div>
-              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-rose-500/20 text-rose-300">
+            <div className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex flex-col justify-between">
+              <div className="flex items-center gap-1.5 text-rose-300">
                 <ArrowUpRight className="h-3.5 w-3.5 stroke-[2.5]" />
+                <span className="text-[10px] font-bold uppercase tracking-wider">
+                  Keluar (Jajan)
+                </span>
               </div>
+              <p className="text-sm sm:text-base font-black text-rose-300 tabular-nums mt-1.5 tracking-tight truncate">
+                -{formatRupiah(summary.expense)}
+              </p>
             </div>
           </div>
 
@@ -400,7 +396,7 @@ export function TransactionsView({ initialUser: _initialUser }: TransactionsView
         </div>
       </div>
 
-      {/* 3. Filter Section Ringkas (Search Bar + Swipeable Horizontal Chips) */}
+      {/* 3. Filter Section Sempurna (Search Bar + Full-Width Segmented Control + Kantong Chips) */}
       <div className="space-y-2.5">
         {/* Search Bar */}
         <div className="relative">
@@ -423,16 +419,13 @@ export function TransactionsView({ initialUser: _initialUser }: TransactionsView
           )}
         </div>
 
-        {/* Swipeable Unified Filter Chips (Tipe & Kantong dalam 1 Baris Horizontal yang Efisien) */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs font-semibold scrollbar-none">
-          {/* Tipe Filter Chips */}
+        {/* Full-Width 4-Column Segmented Control (PAS DI SEMUA LAYAR HP - ZERO KEPOTONG) */}
+        <div className="grid grid-cols-4 gap-1 p-1 rounded-2xl bg-zinc-100 border border-zinc-200/80 text-xs font-bold text-center">
           <button
             type="button"
             onClick={() => setTypeFilter("all")}
-            className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer whitespace-nowrap shrink-0 active:scale-95 ${
-              typeFilter === "all"
-                ? "bg-zinc-950 text-white shadow-2xs"
-                : "bg-white text-zinc-600 border border-zinc-200 hover:bg-zinc-50"
+            className={`py-2 rounded-xl transition-all cursor-pointer whitespace-nowrap active:scale-95 text-[11px] sm:text-xs ${
+              typeFilter === "all" ? "bg-white text-zinc-950 shadow-xs" : "text-zinc-500 hover:text-zinc-900"
             }`}
           >
             Semua
@@ -440,10 +433,8 @@ export function TransactionsView({ initialUser: _initialUser }: TransactionsView
           <button
             type="button"
             onClick={() => setTypeFilter("expense")}
-            className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer whitespace-nowrap shrink-0 active:scale-95 ${
-              typeFilter === "expense"
-                ? "bg-zinc-950 text-white shadow-2xs"
-                : "bg-white text-zinc-600 border border-zinc-200 hover:bg-zinc-50"
+            className={`py-2 rounded-xl transition-all cursor-pointer whitespace-nowrap active:scale-95 text-[11px] sm:text-xs ${
+              typeFilter === "expense" ? "bg-white text-zinc-950 shadow-xs" : "text-zinc-500 hover:text-zinc-900"
             }`}
           >
             Keluar 💸
@@ -451,10 +442,8 @@ export function TransactionsView({ initialUser: _initialUser }: TransactionsView
           <button
             type="button"
             onClick={() => setTypeFilter("income")}
-            className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer whitespace-nowrap shrink-0 active:scale-95 ${
-              typeFilter === "income"
-                ? "bg-zinc-950 text-white shadow-2xs"
-                : "bg-white text-zinc-600 border border-zinc-200 hover:bg-zinc-50"
+            className={`py-2 rounded-xl transition-all cursor-pointer whitespace-nowrap active:scale-95 text-[11px] sm:text-xs ${
+              typeFilter === "income" ? "bg-white text-zinc-950 shadow-xs" : "text-zinc-500 hover:text-zinc-900"
             }`}
           >
             Masuk 💰
@@ -462,18 +451,27 @@ export function TransactionsView({ initialUser: _initialUser }: TransactionsView
           <button
             type="button"
             onClick={() => setTypeFilter("transfer")}
-            className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer whitespace-nowrap shrink-0 active:scale-95 ${
-              typeFilter === "transfer"
-                ? "bg-zinc-950 text-white shadow-2xs"
-                : "bg-white text-zinc-600 border border-zinc-200 hover:bg-zinc-50"
+            className={`py-2 rounded-xl transition-all cursor-pointer whitespace-nowrap active:scale-95 text-[11px] sm:text-xs ${
+              typeFilter === "transfer" ? "bg-white text-zinc-950 shadow-xs" : "text-zinc-500 hover:text-zinc-900"
             }`}
           >
             Pindah ⇄
           </button>
+        </div>
 
-          <span className="text-zinc-300 font-normal px-0.5">|</span>
-
-          {/* Kantong Chips */}
+        {/* Kantong Filter Chips (Dedicated Horizontal Row) */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs font-semibold scrollbar-none">
+          <button
+            type="button"
+            onClick={() => setWalletFilter("all")}
+            className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer whitespace-nowrap shrink-0 active:scale-95 ${
+              walletFilter === "all"
+                ? "bg-zinc-950 text-white shadow-2xs"
+                : "bg-white text-zinc-600 border border-zinc-200 hover:bg-zinc-50"
+            }`}
+          >
+            Semua Kantong
+          </button>
           {wallets.map((w) => {
             const isSelected = walletFilter === w.id;
             return (
@@ -530,7 +528,7 @@ export function TransactionsView({ initialUser: _initialUser }: TransactionsView
             });
 
             return (
-              <div key={dateGroup} className="space-y-2">
+              <div key={dateGroup} className="space-y-2 pt-1.5">
                 {/* Header Tanggal */}
                 <div className="flex items-center justify-between px-1">
                   <span className="text-[11px] font-black tracking-wider text-zinc-400 uppercase">
@@ -563,7 +561,7 @@ export function TransactionsView({ initialUser: _initialUser }: TransactionsView
                       <div
                         key={tx.id}
                         onClick={() => setSelectedTx(tx)}
-                        className="p-3.5 sm:p-4 flex items-center justify-between gap-3 hover:bg-zinc-50 active:bg-zinc-100/70 transition-colors cursor-pointer group"
+                        className="p-4 flex items-center justify-between gap-3 hover:bg-zinc-50 active:bg-zinc-100/70 transition-colors cursor-pointer group"
                       >
                         {/* Kiri: Emoji Kategori & Info Teks Rapi */}
                         <div className="flex items-center gap-3 min-w-0 flex-1">
@@ -572,21 +570,19 @@ export function TransactionsView({ initialUser: _initialUser }: TransactionsView
                             {tx.categoryEmoji}
                           </div>
 
-                          {/* Detail Transaksi (TIDAK KEPOTONG, 1-LINE LEGA) */}
+                          {/* Detail Transaksi (TIDAK KEPOTONG, LEGA) */}
                           <div className="min-w-0 flex-1">
-                            <h4 className="text-sm font-bold text-zinc-950 truncate leading-snug">
+                            <h4 className="text-sm font-bold text-zinc-950 leading-snug break-normal line-clamp-1">
                               {tx.description}
                             </h4>
 
-                            {/* Minimalist Meta Line (BCA • 15:44 • Kopi) */}
-                            <div className="flex items-center gap-1.5 mt-0.5 text-[11px] text-zinc-500 font-medium truncate">
+                            {/* Minimalist Meta Line (BCA • 15:44 - Rapi & Bersih) */}
+                            <div className="flex items-center gap-1.5 mt-0.5 text-[11px] text-zinc-500 font-medium">
                               <span className="font-bold text-zinc-700">
                                 {isTransfer ? `${sourceBank} ➔ ${targetBank}` : sourceBank}
                               </span>
                               <span className="text-zinc-300">•</span>
                               <span className="text-zinc-400">{timeStr}</span>
-                              <span className="text-zinc-300">•</span>
-                              <span className="text-zinc-400 truncate">{tx.category}</span>
                             </div>
                           </div>
                         </div>
@@ -594,7 +590,7 @@ export function TransactionsView({ initialUser: _initialUser }: TransactionsView
                         {/* Kanan: Nominal Transaksi (BERSIH, TEBAL, VERTICALLY CENTERED) */}
                         <div className="text-right shrink-0 pl-1">
                           <p
-                            className={`text-sm sm:text-base font-black tracking-tight tabular-nums ${
+                            className={`text-sm sm:text-base font-black tracking-tight tabular-nums whitespace-nowrap ${
                               isIncome
                                 ? "text-emerald-600"
                                 : isExpense
