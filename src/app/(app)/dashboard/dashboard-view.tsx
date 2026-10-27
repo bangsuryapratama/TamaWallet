@@ -74,7 +74,7 @@ export function DashboardView({ initialUser }: DashboardViewProps) {
   };
 
   return (
-    <div className="space-y-7 pb-32 md:pb-14 max-w-5xl mx-auto">
+    <div className="space-y-6 pb-40 md:pb-14 max-w-5xl mx-auto">
       {/* 1. Header Gaul, Bolder & Eye-Catching */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-1">
         <div>
@@ -194,19 +194,19 @@ export function DashboardView({ initialUser }: DashboardViewProps) {
           </div>
 
           {/* Menu Aksi Cepat Finansial (Color-Coded Eye-Catching Icons) */}
-          <div className="grid grid-cols-4 gap-3 sm:gap-4">
+          <div className="grid grid-cols-4 gap-2 sm:gap-3">
             <Link
               href="/transactions"
               prefetch={true}
-              className="group flex flex-col items-center p-3.5 sm:p-5 rounded-3xl border border-rose-200/90 bg-gradient-to-b from-rose-50/70 to-white hover:from-rose-100/70 active:scale-90 transition-all text-center shadow-xs hover:shadow-md cursor-pointer"
+              className="group flex flex-col items-center p-2.5 sm:p-3.5 rounded-2xl border border-rose-200/90 bg-gradient-to-b from-rose-50/70 to-white hover:from-rose-100/70 active:scale-90 transition-all text-center shadow-xs cursor-pointer"
             >
-              <div className="flex h-13 w-13 items-center justify-center rounded-2xl bg-rose-500 text-white shadow-md shadow-rose-500/25 group-hover:scale-105 transition-transform">
-                <ArrowUpRight className="h-6 w-6 stroke-[2.5]" />
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-rose-500 text-white shadow-sm shadow-rose-500/25 group-hover:scale-105 transition-transform">
+                <ArrowUpRight className="h-5 w-5 stroke-[2.5]" />
               </div>
-              <span className="text-xs font-bold text-zinc-900 mt-2.5">
+              <span className="text-[11px] sm:text-xs font-bold text-zinc-900 mt-2 truncate w-full">
                 Catat Jajan
               </span>
-              <span className="text-[10px] text-rose-600 font-medium hidden sm:inline-block">
+              <span className="text-[9px] text-rose-600 font-medium hidden sm:inline-block">
                 Pengeluaran
               </span>
             </Link>
@@ -214,15 +214,15 @@ export function DashboardView({ initialUser }: DashboardViewProps) {
             <Link
               href="/transactions"
               prefetch={true}
-              className="group flex flex-col items-center p-3.5 sm:p-5 rounded-3xl border border-emerald-200/90 bg-gradient-to-b from-emerald-50/70 to-white hover:from-emerald-100/70 active:scale-90 transition-all text-center shadow-xs hover:shadow-md cursor-pointer"
+              className="group flex flex-col items-center p-2.5 sm:p-3.5 rounded-2xl border border-emerald-200/90 bg-gradient-to-b from-emerald-50/70 to-white hover:from-emerald-100/70 active:scale-90 transition-all text-center shadow-xs cursor-pointer"
             >
-              <div className="flex h-13 w-13 items-center justify-center rounded-2xl bg-emerald-500 text-white shadow-md shadow-emerald-500/25 group-hover:scale-105 transition-transform">
-                <ArrowDownLeft className="h-6 w-6 stroke-[2.5]" />
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-500 text-white shadow-sm shadow-emerald-500/25 group-hover:scale-105 transition-transform">
+                <ArrowDownLeft className="h-5 w-5 stroke-[2.5]" />
               </div>
-              <span className="text-xs font-bold text-zinc-900 mt-2.5">
+              <span className="text-[11px] sm:text-xs font-bold text-zinc-900 mt-2 truncate w-full">
                 Catat Cuan
               </span>
-              <span className="text-[10px] text-emerald-700 font-medium hidden sm:inline-block">
+              <span className="text-[9px] text-emerald-700 font-medium hidden sm:inline-block">
                 Pemasukan
               </span>
             </Link>
@@ -230,31 +230,31 @@ export function DashboardView({ initialUser }: DashboardViewProps) {
             <Link
               href="/transactions"
               prefetch={true}
-              className="group flex flex-col items-center p-3.5 sm:p-5 rounded-3xl border border-indigo-200/90 bg-gradient-to-b from-indigo-50/70 to-white hover:from-indigo-100/70 active:scale-90 transition-all text-center shadow-xs hover:shadow-md cursor-pointer"
+              className="group flex flex-col items-center p-2.5 sm:p-3.5 rounded-2xl border border-indigo-200/90 bg-gradient-to-b from-indigo-50/70 to-white hover:from-indigo-100/70 active:scale-90 transition-all text-center shadow-xs cursor-pointer"
             >
-              <div className="flex h-13 w-13 items-center justify-center rounded-2xl bg-indigo-600 text-white shadow-md shadow-indigo-600/25 group-hover:scale-105 transition-transform">
-                <ArrowLeftRight className="h-6 w-6 stroke-[2.5]" />
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-sm shadow-indigo-600/25 group-hover:scale-105 transition-transform">
+                <ArrowLeftRight className="h-5 w-5 stroke-[2.5]" />
               </div>
-              <span className="text-xs font-bold text-zinc-900 mt-2.5">
+              <span className="text-[11px] sm:text-xs font-bold text-zinc-900 mt-2 truncate w-full">
                 Pindah Saldo
               </span>
-              <span className="text-[10px] text-indigo-700 font-medium hidden sm:inline-block">
-                Transfer Akun
+              <span className="text-[9px] text-indigo-700 font-medium hidden sm:inline-block">
+                Transfer
               </span>
             </Link>
 
             <Link
               href="/wallets"
               prefetch={true}
-              className="group flex flex-col items-center p-3.5 sm:p-5 rounded-3xl border border-amber-200/90 bg-gradient-to-b from-amber-50/70 to-white hover:from-amber-100/70 active:scale-90 transition-all text-center shadow-xs hover:shadow-md cursor-pointer"
+              className="group flex flex-col items-center p-2.5 sm:p-3.5 rounded-2xl border border-amber-200/90 bg-gradient-to-b from-amber-50/70 to-white hover:from-amber-100/70 active:scale-90 transition-all text-center shadow-xs cursor-pointer"
             >
-              <div className="flex h-13 w-13 items-center justify-center rounded-2xl bg-amber-500 text-white shadow-md shadow-amber-500/25 group-hover:scale-105 transition-transform">
-                <WalletCards className="h-6 w-6 stroke-[2.5]" />
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-500 text-white shadow-sm shadow-amber-500/25 group-hover:scale-105 transition-transform">
+                <WalletCards className="h-5 w-5 stroke-[2.5]" />
               </div>
-              <span className="text-xs font-bold text-zinc-900 mt-2.5">
+              <span className="text-[11px] sm:text-xs font-bold text-zinc-900 mt-2 truncate w-full">
                 Atur Dompet
               </span>
-              <span className="text-[10px] text-amber-700 font-medium hidden sm:inline-block">
+              <span className="text-[9px] text-amber-700 font-medium hidden sm:inline-block">
                 Daftar Akun
               </span>
             </Link>
