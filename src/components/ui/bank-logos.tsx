@@ -66,35 +66,24 @@ export function MandiriLogo({ className = "h-6 w-auto", size, monochrome = false
 
 /**
  * Logo Resmi Bank Jago
+ * Menggunakan asset logo resmi Bank Jago yang 100% otentik
  */
-export function JagoLogo({ className = "h-6 w-auto", size, monochrome = false, ...props }: BankLogoProps) {
-  const orangeColor = monochrome ? "currentColor" : "#FF9E00";
+export function JagoLogo({ className = "h-6 w-auto", size, monochrome = false, style }: BankLogoProps) {
   return (
-    <svg
-      viewBox="0 0 95 32"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src="/logos/jago.png?v=2"
+      alt="Bank Jago"
       className={className}
-      style={size ? { height: size, width: "auto" } : undefined}
-      {...props}
-    >
-      <circle cx="15" cy="16" r="14" fill={orangeColor} />
-      <path
-        d="M15 8C11.5 8 8.5 11 8.5 15C8.5 19.5 14 23 15 24C16 23 21.5 19.5 21.5 15C21.5 11 18.5 8 15 8Z"
-        fill={monochrome ? "#000" : "#FFFFFF"}
-      />
-      <text
-        x="34"
-        y="23"
-        fill={monochrome ? "currentColor" : "#1A1A1A"}
-        fontFamily="-apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif"
-        fontWeight="900"
-        fontSize="22"
-        letterSpacing="-0.5"
-      >
-        jago
-      </text>
-    </svg>
+      style={{
+        height: size ? `${size}px` : undefined,
+        width: "auto",
+        objectFit: "contain",
+        filter: monochrome ? "brightness(0) invert(1)" : undefined,
+        ...style,
+      }}
+      loading="eager"
+    />
   );
 }
 
