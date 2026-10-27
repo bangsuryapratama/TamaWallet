@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
+import NextTopLoader from "nextjs-toploader";
 import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 
@@ -36,6 +37,18 @@ export default function RootLayout({
   return (
     <html lang="id" className={plusJakarta.variable}>
       <body className="min-h-screen bg-white font-sans text-zinc-900 antialiased selection:bg-zinc-900 selection:text-white">
+        <NextTopLoader
+          color="#09090b"
+          initialPosition={0.15}
+          crawlSpeed={200}
+          height={3}
+          crawl={true}
+          showSpinner={false}
+          easing="ease"
+          speed={200}
+          shadow="0 0 10px rgba(9,9,11,0.5)"
+          zIndex={999999}
+        />
         {children}
         <Toaster />
       </body>
