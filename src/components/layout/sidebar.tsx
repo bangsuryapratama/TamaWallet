@@ -1,18 +1,22 @@
 "use client";
 
+import * as React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   WalletCards,
   ArrowLeftRight,
   Target,
   TrendingUp,
-  ShieldCheck,
   LogIn,
+  LogOut,
+  User as UserIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { createClient } from "@/lib/supabase/client";
+import { User } from "@supabase/supabase-js";
 
 export const navigationItems = [
   {
@@ -49,6 +53,42 @@ export const navigationItems = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const [user, setUser] = React.useState<User | null>(null);
+  const [isLoggingOut, setIsLoggingOut] = React.useState(false);
+
+  React.useEffect(() => {
+    const supabase = createClient();
+    if (!supabase) return;
+
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUser(user);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  const handleSignOut = async () => {
+    const supabase = createClient();
+    if (!supabase) return;
+
+    setIsLoggingOut(true);
+    try {
+      await supabase.auth.signOut();
+      router.push("/login");
+      router.refresh();
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
 
   return (
     <aside className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 z-30 border-r border-border bg-card">
@@ -108,28 +148,54 @@ export function Sidebar() {
         })}
       </div>
 
-      {/* Footer Info / Auth status */}
+      {/* User Section / Auth Status */}
       <div className="border-t border-border p-4 space-y-3 bg-card/60">
-        <div className="rounded-md border border-border/80 bg-background/50 p-2.5">
-          <div className="flex items-center gap-2 text-xs font-medium text-foreground">
-            <ShieldCheck className="h-4 w-4 text-primary" />
-            <span>Fondasi: Modul 0</span>
-          </div>
-          <p className="mt-1 text-[11px] text-muted-foreground leading-relaxed">
-            Presisi deterministik, bebas mock data palsu.
-          </p>
-        </div>
+        {user ? (
+          <div className="space-y-3">
+            <div className="flex items-center gap-2.5 px-1">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/15 text-primary text-xs font-semibold">
+                {user.user_metadata?.display_name
+                  ? user.user_metadata.display_name.charAt(0).toUpperCase()
+                  : user.email?.charAt(0).toUpperCase() || "U"}
+              </div>
+              <div className="flex flex-col min-w-0 flex-1">
+                <span className="text-xs font-medium text-foreground truncate">
+                  {user.user_metadata?.display_name || user.email?.split("@")[0]}
+                </span>
+                <span className="text-[10px] text-muted-foreground truncate">
+                  {user.email}
+                </span>
+              </div>
+            </div>
 
-        <Link
-          href="/login"
-          className="flex items-center justify-between rounded-md px-3 py-2 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
-        >
-          <span className="flex items-center gap-2">
-            <LogIn className="h-3.5 w-3.5" />
-            <span>Halaman Login</span>
-          </span>
-          <span className="text-[10px] text-muted-foreground">Terpisah</span>
-        </Link>
+            <button
+              onClick={handleSignOut}
+              disabled={isLoggingOut}
+              className="flex w-full items-center justify-between rounded-md border border-border/80 bg-background/50 px-3 py-2 text-xs font-medium text-muted-foreground hover:bg-destructive/10 hover:text-negative hover:border-negative/30 transition-colors"
+            >
+              <span className="flex items-center gap-2">
+                <LogOut className="h-3.5 w-3.5" />
+                <span>{isLoggingOut ? "Keluar..." : "Keluar Sesi"}</span>
+              </span>
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 px-1 text-xs text-muted-foreground">
+              <UserIcon className="h-4 w-4" />
+              <span>Sesi Tamu</span>
+            </div>
+            <Link
+              href="/login"
+              className="flex items-center justify-between rounded-md border border-primary/30 bg-primary/5 px-3 py-2 text-xs font-medium text-primary hover:bg-primary/10 transition-colors"
+            >
+              <span className="flex items-center gap-2">
+                <LogIn className="h-3.5 w-3.5" />
+                <span>Masuk Akun</span>
+              </span>
+            </Link>
+          </div>
+        )}
       </div>
     </aside>
   );
