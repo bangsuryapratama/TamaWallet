@@ -154,39 +154,64 @@ export function DashboardView({ initialUser }: DashboardViewProps) {
                 </button>
               </div>
 
-              {/* Nominal Angka Raksasa & Tegas */}
-              <div>
-                <p className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight font-mono text-white tabular-nums">
-                  {showBalance ? "Rp 0,00" : "••••••••••"}
-                </p>
-                <p className="text-xs text-zinc-400 mt-2 font-medium">
+              {/* Nominal Angka Responsif ala BCA (Mau 0 Berapapun Ga Bakal Tumpuk) */}
+              <div className="min-w-0 overflow-hidden">
+                <div className="flex items-baseline gap-1.5 whitespace-nowrap overflow-hidden text-ellipsis">
+                  {showBalance ? (
+                    <>
+                      <span className="text-base sm:text-lg md:text-xl font-bold font-mono text-emerald-400/90 select-none shrink-0">
+                        Rp
+                      </span>
+                      <span
+                        className="font-black tracking-tight font-mono text-white tabular-nums truncate leading-none"
+                        style={{
+                          fontSize: "clamp(1.75rem, 7vw, 3.25rem)",
+                          lineHeight: 1.1,
+                        }}
+                      >
+                        0,00
+                      </span>
+                    </>
+                  ) : (
+                    <span
+                      className="font-black tracking-widest font-mono text-zinc-400 select-none leading-none"
+                      style={{
+                        fontSize: "clamp(1.5rem, 6vw, 2.5rem)",
+                        lineHeight: 1.1,
+                      }}
+                    >
+                      ••••••••••••
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-zinc-400 mt-2 font-medium truncate">
                   Total saldo aman siap pakai di seluruh rekening & dompet kamu
                 </p>
               </div>
 
-              {/* Breakdown Arus Kas Bulan Ini (Cuan vs Jajan dengan Visual Badge Menarik) */}
-              <div className="pt-6 border-t border-zinc-800/90 grid grid-cols-2 gap-4 sm:gap-5">
-                <div className="p-3.5 rounded-2xl bg-emerald-950/40 border border-emerald-500/20 space-y-1">
-                  <div className="flex items-center gap-1.5 text-[11px] text-emerald-400 font-bold">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 text-zinc-950 font-black shadow-xs">
-                      <ArrowDownLeft className="h-3 w-3 stroke-[3]" />
+              {/* Breakdown Arus Kas Bulan Ini (Cuan & Jajan Selalu Ditampilkan Sesuai Permintaan) */}
+              <div className="pt-5 border-t border-zinc-800/90 grid grid-cols-2 gap-3 sm:gap-4">
+                <div className="p-3 sm:p-3.5 rounded-2xl bg-emerald-950/40 border border-emerald-500/20 space-y-1 min-w-0 overflow-hidden">
+                  <div className="flex items-center gap-1.5 text-[11px] text-emerald-400 font-bold truncate">
+                    <span className="flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-zinc-950 font-black shadow-xs">
+                      <ArrowDownLeft className="h-2.5 w-2.5 stroke-[3]" />
                     </span>
                     <span className="truncate">Cuan Masuk</span>
                   </div>
-                  <p className="text-lg sm:text-xl font-black font-mono text-emerald-300 pl-6.5 tabular-nums">
-                    {showBalance ? "+ Rp 0" : "••••••"}
+                  <p className="text-sm sm:text-base md:text-lg font-black font-mono text-emerald-300 truncate tabular-nums">
+                    + Rp 0
                   </p>
                 </div>
 
-                <div className="p-3.5 rounded-2xl bg-rose-950/30 border border-rose-500/20 space-y-1">
-                  <div className="flex items-center gap-1.5 text-[11px] text-rose-300 font-bold">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-rose-500 text-white font-black shadow-xs">
-                      <ArrowUpRight className="h-3 w-3 stroke-[3]" />
+                <div className="p-3 sm:p-3.5 rounded-2xl bg-rose-950/30 border border-rose-500/20 space-y-1 min-w-0 overflow-hidden">
+                  <div className="flex items-center gap-1.5 text-[11px] text-rose-300 font-bold truncate">
+                    <span className="flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded-full bg-rose-500 text-white font-black shadow-xs">
+                      <ArrowUpRight className="h-2.5 w-2.5 stroke-[3]" />
                     </span>
                     <span className="truncate">Jajan Keluar</span>
                   </div>
-                  <p className="text-lg sm:text-xl font-black font-mono text-rose-200 pl-6.5 tabular-nums">
-                    {showBalance ? "- Rp 0" : "••••••"}
+                  <p className="text-sm sm:text-base md:text-lg font-black font-mono text-rose-200 truncate tabular-nums">
+                    - Rp 0
                   </p>
                 </div>
               </div>
@@ -377,7 +402,7 @@ export function DashboardView({ initialUser }: DashboardViewProps) {
                   <div>
                     <p className="text-[10px] text-zinc-400 uppercase tracking-wider font-semibold">Saldo Aktif</p>
                     <p className="text-lg font-black font-mono text-white tabular-nums">
-                      {showBalance ? "Rp 0" : "••••••"}
+                      Rp 0
                     </p>
                   </div>
                   <span className="text-[10px] font-bold font-mono px-2 py-0.5 rounded-md bg-blue-500/20 text-blue-300 border border-blue-400/30">
@@ -404,7 +429,7 @@ export function DashboardView({ initialUser }: DashboardViewProps) {
                   <div>
                     <p className="text-[10px] text-zinc-400 uppercase tracking-wider font-semibold">Saldo Jajan</p>
                     <p className="text-lg font-black font-mono text-white tabular-nums">
-                      {showBalance ? "Rp 0" : "••••••"}
+                      Rp 0
                     </p>
                   </div>
                   <span className="text-[10px] font-bold font-mono px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
@@ -431,7 +456,7 @@ export function DashboardView({ initialUser }: DashboardViewProps) {
                   <div>
                     <p className="text-[10px] text-zinc-400 uppercase tracking-wider font-semibold">Di Dompet</p>
                     <p className="text-lg font-black font-mono text-white tabular-nums">
-                      {showBalance ? "Rp 0" : "••••••"}
+                      Rp 0
                     </p>
                   </div>
                   <span className="text-[10px] font-bold font-mono px-2 py-0.5 rounded-md bg-zinc-700 text-zinc-300">
