@@ -4,8 +4,10 @@ import * as React from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2, Eye, EyeOff } from "lucide-react";
+import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/env";
+import { normalizeAuthError } from "@/lib/auth-errors";
 import { LogoIcon } from "@/components/ui/logo";
 
 type AuthMode = "signin" | "signup";
@@ -22,34 +24,38 @@ function LoginForm() {
   const [showPassword, setShowPassword] = React.useState(false);
 
   const [isLoading, setIsLoading] = React.useState(false);
-  const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = React.useState<string | null>(null);
 
   const supabaseReady = isSupabaseConfigured();
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrorMessage(null);
-    setSuccessMessage(null);
 
     if (!supabaseReady) {
-      setErrorMessage("Kredensial Supabase belum terkonfigurasi di file .env.local.");
+      toast.error("Konfigurasi belum siap", {
+        description: "Kredensial Supabase belum terkonfigurasi di file .env.local.",
+      });
       return;
     }
 
     if (!email.trim() || !password) {
-      setErrorMessage("Silakan lengkapi email dan kata sandi.");
+      toast.error("Data belum lengkap", {
+        description: "Silakan isi email dan kata sandi Anda.",
+      });
       return;
     }
 
     if (password.length < 6) {
-      setErrorMessage("Kata sandi minimal terdiri dari 6 karakter.");
+      toast.error("Kata sandi terlalu pendek", {
+        description: "Kata sandi minimal terdiri dari 6 karakter.",
+      });
       return;
     }
 
     const supabase = createClient();
     if (!supabase) {
-      setErrorMessage("Gagal menghubungkan ke Supabase.");
+      toast.error("Koneksi gagal", {
+        description: "Gagal menghubungkan ke layanan Supabase.",
+      });
       return;
     }
 
@@ -57,58 +63,68 @@ function LoginForm() {
 
     try {
       if (mode === "signin") {
-        const { error } = await supabase.auth.signInWithPassword({
+        const { data, error } = await supabase.auth.signInWithPassword({
           email: email.trim(),
           password,
         });
 
         if (error) {
-          if (error.message.includes("Invalid login credentials")) {
-            setErrorMessage("Alamat email atau kata sandi tidak cocok.");
-          } else if (error.message.includes("Email not confirmed")) {
-            setErrorMessage("Email belum diverifikasi. Cek tautan di kotak masuk Anda.");
-          } else {
-            setErrorMessage(error.message);
-          }
+          const friendlyMessage = normalizeAuthError(error);
+          toast.error("Gagal masuk", {
+            description: friendlyMessage,
+          });
           return;
         }
+
+        const name =
+          data.user?.user_metadata?.display_name ||
+          data.user?.email?.split("@")[0] ||
+          "Pengguna";
+
+        toast.success("Berhasil masuk!", {
+          description: `Selamat datang kembali, ${name}. Mengalihkan ke dashboard...`,
+        });
 
         router.push(redirectTo);
         router.refresh();
       } else {
+        const finalName = displayName.trim() || email.split("@")[0];
         const { data, error } = await supabase.auth.signUp({
           email: email.trim(),
           password,
           options: {
             data: {
-              display_name: displayName.trim() || email.split("@")[0],
+              display_name: finalName,
             },
           },
         });
 
         if (error) {
-          if (error.message.includes("already registered")) {
-            setErrorMessage("Email ini sudah terdaftar. Silakan pilih tab Masuk.");
-          } else {
-            setErrorMessage(error.message);
-          }
+          const friendlyMessage = normalizeAuthError(error);
+          toast.error("Pendaftaran gagal", {
+            description: friendlyMessage,
+          });
           return;
         }
 
         if (data.session) {
+          toast.success("Akun berhasil dibuat!", {
+            description: `Selamat bergabung, ${finalName}. Mengalihkan ke dashboard...`,
+          });
           router.push(redirectTo);
           router.refresh();
         } else {
-          setSuccessMessage(
-            "Pendaftaran berhasil! Tautan konfirmasi telah dikirim ke email Anda."
-          );
+          toast.success("Tautan verifikasi terkirim", {
+            description:
+              "Silakan periksa kotak masuk email Anda untuk mengaktifkan akun.",
+          });
           setMode("signin");
         }
       }
     } catch (err: unknown) {
-      setErrorMessage(
-        err instanceof Error ? err.message : "Terjadi kendala koneksi."
-      );
+      toast.error("Terjadi kendala", {
+        description: normalizeAuthError(err),
+      });
     } finally {
       setIsLoading(false);
     }
@@ -142,11 +158,7 @@ function LoginForm() {
         <div className="flex bg-zinc-100 p-1 rounded-xl mb-6 border border-zinc-200/60">
           <button
             type="button"
-            onClick={() => {
-              setMode("signin");
-              setErrorMessage(null);
-              setSuccessMessage(null);
-            }}
+            onClick={() => setMode("signin")}
             className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
               mode === "signin"
                 ? "bg-white text-zinc-950 shadow-sm"
@@ -157,11 +169,7 @@ function LoginForm() {
           </button>
           <button
             type="button"
-            onClick={() => {
-              setMode("signup");
-              setErrorMessage(null);
-              setSuccessMessage(null);
-            }}
+            onClick={() => setMode("signup")}
             className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
               mode === "signup"
                 ? "bg-white text-zinc-950 shadow-sm"
@@ -171,20 +179,6 @@ function LoginForm() {
             Daftar
           </button>
         </div>
-
-        {/* Error Feedback */}
-        {errorMessage && (
-          <div className="mb-4 rounded-xl border border-red-200 bg-red-50/90 px-3.5 py-2.5 text-xs text-red-600 font-medium leading-relaxed">
-            {errorMessage}
-          </div>
-        )}
-
-        {/* Success Feedback */}
-        {successMessage && (
-          <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50/90 px-3.5 py-2.5 text-xs text-emerald-800 font-medium leading-relaxed">
-            {successMessage}
-          </div>
-        )}
 
         {/* Form Inputs */}
         <form onSubmit={handleAuth} className="space-y-4">
@@ -290,11 +284,7 @@ function LoginForm() {
               Belum punya akun?{" "}
               <button
                 type="button"
-                onClick={() => {
-                  setMode("signup");
-                  setErrorMessage(null);
-                  setSuccessMessage(null);
-                }}
+                onClick={() => setMode("signup")}
                 className="font-bold text-zinc-900 hover:underline cursor-pointer"
               >
                 Daftar sekarang
@@ -305,11 +295,7 @@ function LoginForm() {
               Sudah punya akun?{" "}
               <button
                 type="button"
-                onClick={() => {
-                  setMode("signin");
-                  setErrorMessage(null);
-                  setSuccessMessage(null);
-                }}
+                onClick={() => setMode("signin")}
                 className="font-bold text-zinc-900 hover:underline cursor-pointer"
               >
                 Masuk di sini

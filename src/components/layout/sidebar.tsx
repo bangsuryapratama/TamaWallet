@@ -16,6 +16,7 @@ import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { LogoIcon } from "@/components/ui/logo";
+import { toast } from "sonner";
 
 export const navigationItems = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -57,6 +58,9 @@ export function Sidebar() {
     setIsLoggingOut(true);
     try {
       await supabase.auth.signOut();
+      toast.success("Sesi berakhir", {
+        description: "Anda telah berhasil keluar dari akun.",
+      });
       router.push("/login");
       router.refresh();
     } finally {

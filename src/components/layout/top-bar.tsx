@@ -8,6 +8,7 @@ import { navigationItems } from "./sidebar";
 import { createClient } from "@/lib/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { LogoIcon } from "@/components/ui/logo";
+import { toast } from "sonner";
 
 export function TopBar() {
   const pathname = usePathname();
@@ -38,6 +39,9 @@ export function TopBar() {
     if (!supabase) return;
 
     await supabase.auth.signOut();
+    toast.success("Sesi berakhir", {
+      description: "Anda telah berhasil keluar dari akun.",
+    });
     router.push("/login");
     router.refresh();
   };
