@@ -127,26 +127,26 @@ export function DashboardView({ initialUser }: DashboardViewProps) {
 
             <div className="relative z-10 space-y-7">
               {/* Top Row: Metallic Titanium Badge & Privacy Eye */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,1)]" />
-                  <span className="text-[11px] font-mono tracking-widest text-emerald-300 uppercase font-black bg-emerald-950/60 border border-emerald-500/30 px-2.5 py-1 rounded-full shadow-xs">
-                    TOTAL DUIT KAMU
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="flex h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,1)] shrink-0" />
+                  <span className="text-[10px] font-mono tracking-wider text-emerald-300 uppercase font-bold bg-emerald-950/60 border border-emerald-500/30 px-2.5 py-1 rounded-full shadow-xs whitespace-nowrap">
+                    TOTAL SALDO
                   </span>
                 </div>
                 <button
                   onClick={toggleBalance}
-                  className="flex items-center gap-1.5 text-xs text-zinc-300 hover:text-white transition-all py-1.5 px-3.5 rounded-full bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-700 active:scale-90 cursor-pointer shadow-sm"
+                  className="flex items-center gap-1.5 text-xs text-zinc-300 hover:text-white transition-all py-1 px-3 rounded-full bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-700 active:scale-90 cursor-pointer shadow-sm shrink-0"
                 >
                   {showBalance ? (
                     <>
                       <EyeOff className="h-3.5 w-3.5 text-zinc-400" />
-                      <span className="text-[11px] font-bold">Sembunyikan</span>
+                      <span className="text-[11px] font-bold whitespace-nowrap">Sembunyikan</span>
                     </>
                   ) : (
                     <>
                       <Eye className="h-3.5 w-3.5 text-emerald-400" />
-                      <span className="text-[11px] font-bold text-emerald-400">
+                      <span className="text-[11px] font-bold text-emerald-400 whitespace-nowrap">
                         Buka Saldo
                       </span>
                     </>
@@ -194,7 +194,7 @@ export function DashboardView({ initialUser }: DashboardViewProps) {
           </div>
 
           {/* Menu Aksi Cepat Finansial (Color-Coded Eye-Catching Icons) */}
-          <div className="grid grid-cols-4 gap-2 sm:gap-3">
+          <div className="grid grid-cols-4 gap-2.5 sm:gap-3">
             <Link
               href="/transactions"
               prefetch={true}
@@ -203,11 +203,11 @@ export function DashboardView({ initialUser }: DashboardViewProps) {
               <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-rose-500 text-white shadow-sm shadow-rose-500/25 group-hover:scale-105 transition-transform">
                 <ArrowUpRight className="h-5 w-5 stroke-[2.5]" />
               </div>
-              <span className="text-[11px] sm:text-xs font-bold text-zinc-900 mt-2 truncate w-full">
-                Catat Jajan
+              <span className="text-xs font-bold text-zinc-900 mt-2 truncate w-full text-center">
+                Jajan
               </span>
               <span className="text-[9px] text-rose-600 font-medium hidden sm:inline-block">
-                Pengeluaran
+                Keluar
               </span>
             </Link>
 
@@ -219,11 +219,11 @@ export function DashboardView({ initialUser }: DashboardViewProps) {
               <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-500 text-white shadow-sm shadow-emerald-500/25 group-hover:scale-105 transition-transform">
                 <ArrowDownLeft className="h-5 w-5 stroke-[2.5]" />
               </div>
-              <span className="text-[11px] sm:text-xs font-bold text-zinc-900 mt-2 truncate w-full">
-                Catat Cuan
+              <span className="text-xs font-bold text-zinc-900 mt-2 truncate w-full text-center">
+                Cuan
               </span>
               <span className="text-[9px] text-emerald-700 font-medium hidden sm:inline-block">
-                Pemasukan
+                Masuk
               </span>
             </Link>
 
@@ -235,11 +235,11 @@ export function DashboardView({ initialUser }: DashboardViewProps) {
               <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-sm shadow-indigo-600/25 group-hover:scale-105 transition-transform">
                 <ArrowLeftRight className="h-5 w-5 stroke-[2.5]" />
               </div>
-              <span className="text-[11px] sm:text-xs font-bold text-zinc-900 mt-2 truncate w-full">
-                Pindah Saldo
+              <span className="text-xs font-bold text-zinc-900 mt-2 truncate w-full text-center">
+                Transfer
               </span>
               <span className="text-[9px] text-indigo-700 font-medium hidden sm:inline-block">
-                Transfer
+                Pindah
               </span>
             </Link>
 
@@ -251,11 +251,11 @@ export function DashboardView({ initialUser }: DashboardViewProps) {
               <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-500 text-white shadow-sm shadow-amber-500/25 group-hover:scale-105 transition-transform">
                 <WalletCards className="h-5 w-5 stroke-[2.5]" />
               </div>
-              <span className="text-[11px] sm:text-xs font-bold text-zinc-900 mt-2 truncate w-full">
-                Atur Dompet
+              <span className="text-xs font-bold text-zinc-900 mt-2 truncate w-full text-center">
+                Dompet
               </span>
               <span className="text-[9px] text-amber-700 font-medium hidden sm:inline-block">
-                Daftar Akun
+                Akun
               </span>
             </Link>
           </div>
