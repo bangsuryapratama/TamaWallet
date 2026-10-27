@@ -39,8 +39,8 @@ export function BottomNav() {
 
   return (
     <nav className="md:hidden fixed bottom-6 inset-x-0 mx-auto w-[335px] z-40 touch-manipulation pointer-events-none select-none">
-      {/* Symmetrical Tactile Floating Glass Dock */}
-      <div className="pointer-events-auto relative bg-white/85 backdrop-blur-3xl saturate-180 border border-zinc-200/80 rounded-[30px] shadow-[0_16px_45px_-6px_rgba(0,0,0,0.18),0_4px_12px_rgba(0,0,0,0.05)] px-2 h-[68px] grid grid-cols-5 items-center">
+      {/* Symmetrical Tactile Floating Glass Dock (GPU Accelerated & Lightweight) */}
+      <div className="pointer-events-auto relative transform-gpu bg-white/90 backdrop-blur-xl border border-zinc-200/80 rounded-[30px] shadow-[0_12px_32px_-6px_rgba(0,0,0,0.12)] px-2 h-[68px] grid grid-cols-5 items-center">
         {tabs.map((tab, idx) => {
           const Icon = tab.icon;
           const isActive =

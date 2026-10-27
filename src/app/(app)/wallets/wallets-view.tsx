@@ -335,7 +335,7 @@ export function WalletsView({ initialUser }: WalletsViewProps) {
   };
 
   return (
-    <div className="space-y-6 pb-40 md:pb-16 max-w-4xl mx-auto">
+    <div className="space-y-6 pb-52 md:pb-24 max-w-4xl mx-auto">
       {/* 1. Header Kantong Duit */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-1">
         <div>
@@ -553,123 +553,120 @@ export function WalletsView({ initialUser }: WalletsViewProps) {
             <div
               key={wallet.id}
               className={cn(
-                "group relative p-6 sm:p-7 rounded-[30px] border transition-all duration-300 flex flex-col justify-between overflow-hidden active:scale-[0.98] min-h-[230px]",
+                "group relative p-5 sm:p-6 rounded-[28px] border transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-lg",
                 cardBg
               )}
             >
               {/* Iridescent Light Sheen Overlay */}
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-white/10 via-transparent to-transparent opacity-70" />
 
-              {/* Baris Atas: Emoji + Nama + Badge Logo Resmi Bank (Sangat Jelas & Kontras) */}
+              {/* Baris 1: Header Kartu (Logo & Judul) */}
               <div className="relative z-10 flex items-start justify-between gap-3">
-                <div className="flex items-center gap-2.5">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/15 backdrop-blur-md text-xl select-none shadow-xs border border-white/10">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white/15 backdrop-blur-md text-xl select-none shadow-xs border border-white/10">
                     {wallet.emoji}
                   </div>
-                  <div>
-                    <h3 className="text-sm font-bold tracking-tight text-white line-clamp-1">
+                  <div className="min-w-0">
+                    <h3 className="text-sm font-bold tracking-tight text-white truncate">
                       {wallet.name}
                     </h3>
                     <div className="flex items-center gap-1.5 mt-0.5">
-                      <span className="text-[10px] text-zinc-300 font-semibold uppercase tracking-wider">
+                      <span className="text-[10px] text-zinc-300 font-semibold uppercase tracking-wider truncate">
                         {isBca ? "PASSPORT BCA" : isJago ? "KARTU JAGO" : isGopay ? "GOPAY PLUS" : "DEBIT CARD"}
                       </span>
                       {wallet.isLocked && (
-                        <span className="text-[10px] font-bold text-amber-300 flex items-center gap-0.5">
-                          • Terkunci 🔒
+                        <span className="text-[10px] font-bold text-amber-300 shrink-0 flex items-center gap-0.5">
+                          • Kunci 🔒
                         </span>
                       )}
                     </div>
                   </div>
                 </div>
 
-                {/* LOGO RESMI BANK: BADGE PUTIH GLOSSY (100% TERLIHAT JELAS!) */}
+                {/* LOGO RESMI BANK (100% Terlihat Jelas di Platter Putih) */}
                 <div className="shrink-0">
                   <BankCardBadge provider={wallet.provider} />
                 </div>
               </div>
 
-              {/* Baris Tengah: EMV Chip Emas Realistis + NFC Contactless Wave */}
-              <div className="relative z-10 flex items-center gap-3 my-4">
-                {/* Chip Emas Realistis */}
-                <div className="h-7 w-9 rounded-md bg-gradient-to-tr from-amber-300 via-amber-100 to-amber-400 border border-amber-400/80 shadow-xs relative overflow-hidden flex items-center justify-center">
-                  {/* Chip Internal Circuit Lines */}
+              {/* Baris 2: EMV Chip + NFC Contactless */}
+              <div className="relative z-10 flex items-center gap-3 my-3">
+                <div className="h-7 w-9 rounded-md bg-gradient-to-tr from-amber-300 via-amber-100 to-amber-400 border border-amber-400/80 shadow-xs relative overflow-hidden flex items-center justify-center shrink-0">
                   <div className="absolute inset-0 border border-amber-600/30 m-0.5 rounded-xs" />
                   <div className="h-full w-[1px] bg-amber-600/40" />
                   <div className="w-full h-[1px] bg-amber-600/40 absolute" />
                 </div>
-
-                {/* NFC Wave */}
-                <Wifi className="h-4 w-4 text-white/60 rotate-90" />
+                <Wifi className="h-4 w-4 text-white/60 rotate-90 shrink-0" />
               </div>
 
-              {/* Saldo Kartu Finansial */}
+              {/* Baris 3: Saldo Aktif */}
               <div className="relative z-10 my-1">
                 <p className="text-[10px] text-zinc-300 uppercase tracking-widest font-semibold">
                   Saldo Aktif
                 </p>
                 <p
-                  className="font-black text-white tracking-tight tabular-nums mt-0.5 leading-none"
-                  style={{ fontSize: "clamp(1.5rem, 4.5vw, 2rem)" }}
+                  className="font-black text-white tracking-tight tabular-nums mt-0.5 leading-none truncate"
+                  style={{ fontSize: "clamp(1.5rem, 5vw, 1.85rem)" }}
                 >
                   {showBalance ? formatRupiah(wallet.balance) : "••••••••••••"}
                 </p>
               </div>
 
-              {/* Footer Kartu: Nomor Akun, Pemegang, & Tombol Aksi Cepat */}
-              <div className="relative z-10 pt-4 mt-2 border-t border-white/15 flex items-end justify-between gap-2">
-                <div className="space-y-0.5">
-                  <p className="text-xs font-mono tracking-widest text-zinc-300">
-                    {wallet.accountNumber || "•••• •••• •••• 9921"}
-                  </p>
-                  <p className="text-[10px] tracking-wider text-zinc-400 uppercase font-semibold">
-                    {wallet.holderName || defaultHolder}
-                  </p>
-                </div>
+              {/* Baris 4: Nomor Kartu & Pemilik (FULL WIDTH - Rapi & Anti-Wrap) */}
+              <div className="relative z-10 pt-3 mt-1 border-t border-white/15 flex items-center justify-between gap-2">
+                <span className="font-mono tracking-widest text-zinc-200 text-xs sm:text-sm whitespace-nowrap">
+                  {wallet.accountNumber || "5241 •••• •••• 8912"}
+                </span>
+                <span className="text-[10px] tracking-wider text-zinc-300 uppercase font-bold truncate">
+                  {wallet.holderName || defaultHolder}
+                </span>
+              </div>
 
-                {/* Tombol Aksi Cepat Interaktif Langsung di Kartu */}
-                <div className="flex items-center gap-1.5 shrink-0">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSelectedWallet(wallet);
-                      setIsTopUpModalOpen(true);
-                    }}
-                    title="Isi saldo kantong"
-                    className="h-8 px-2.5 rounded-xl bg-white/15 hover:bg-white/25 active:scale-90 text-[11px] font-bold text-white flex items-center gap-1 transition-all cursor-pointer backdrop-blur-md"
-                  >
-                    <PlusCircle className="h-3.5 w-3.5" />
-                    <span>Top Up</span>
-                  </button>
+              {/* Baris 5: Action Buttons (DEDICATED 3-COLUMN ROW - PAS DI HP & TIDAK CRUSH NOMOR) */}
+              <div className="relative z-10 grid grid-cols-3 gap-2 pt-3 mt-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedWallet(wallet);
+                    setIsTopUpModalOpen(true);
+                  }}
+                  className="h-8.5 rounded-xl bg-white/15 hover:bg-white/25 active:scale-95 text-[11px] font-bold text-white flex items-center justify-center gap-1.5 transition-all cursor-pointer backdrop-blur-md"
+                >
+                  <PlusCircle className="h-3.5 w-3.5" />
+                  <span>Top Up</span>
+                </button>
 
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSelectedWallet(wallet);
-                      const other = wallets.find((w) => w.id !== wallet.id);
-                      setTargetWalletId(other ? other.id : "");
-                      setIsTransferModalOpen(true);
-                    }}
-                    title="Pindah saldo ke kantong lain"
-                    className="h-8 px-2.5 rounded-xl bg-white/15 hover:bg-white/25 active:scale-90 text-[11px] font-bold text-white flex items-center gap-1 transition-all cursor-pointer backdrop-blur-md"
-                  >
-                    <ArrowLeftRight className="h-3.5 w-3.5" />
-                    <span>Pindah</span>
-                  </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedWallet(wallet);
+                    const other = wallets.find((w) => w.id !== wallet.id);
+                    setTargetWalletId(other ? other.id : "");
+                    setIsTransferModalOpen(true);
+                  }}
+                  className="h-8.5 rounded-xl bg-white/15 hover:bg-white/25 active:scale-95 text-[11px] font-bold text-white flex items-center justify-center gap-1.5 transition-all cursor-pointer backdrop-blur-md"
+                >
+                  <ArrowLeftRight className="h-3.5 w-3.5" />
+                  <span>Pindah</span>
+                </button>
 
-                  <button
-                    type="button"
-                    onClick={() => toggleLockWallet(wallet.id, wallet.isLocked)}
-                    title={wallet.isLocked ? "Buka kunci kantong" : "Kunci kantong"}
-                    className="h-8 w-8 rounded-xl bg-white/15 hover:bg-white/25 active:scale-90 text-white flex items-center justify-center transition-all cursor-pointer backdrop-blur-md"
-                  >
-                    {wallet.isLocked ? (
+                <button
+                  type="button"
+                  onClick={() => toggleLockWallet(wallet.id, wallet.isLocked)}
+                  className="h-8.5 rounded-xl bg-white/15 hover:bg-white/25 active:scale-95 text-[11px] font-bold text-white flex items-center justify-center gap-1.5 transition-all cursor-pointer backdrop-blur-md"
+                >
+                  {wallet.isLocked ? (
+                    <>
                       <Lock className="h-3.5 w-3.5 text-amber-300" />
-                    ) : (
+                      <span className="text-amber-200">Kunci</span>
+                    </>
+                  ) : (
+                    <>
                       <Unlock className="h-3.5 w-3.5 text-zinc-300" />
-                    )}
-                  </button>
-                </div>
+                      <span>Buka</span>
+                    </>
+                  )}
+                </button>
               </div>
             </div>
           );
