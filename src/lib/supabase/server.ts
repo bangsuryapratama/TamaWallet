@@ -1,6 +1,6 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { cookies } from "next/headers";
-import { isSupabaseConfigured } from "../env";
+import { isSupabaseConfigured, getSupabaseAnonKey } from "../env";
 
 /**
  * Membuat Supabase Client untuk lingkungan Server (Server Components, Route Handlers, Server Actions).
@@ -13,7 +13,7 @@ export function createServerSupabaseClient() {
 
   const cookieStore = cookies();
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+  const supabaseAnonKey = getSupabaseAnonKey()!;
 
   return createServerClient(supabaseUrl, supabaseAnonKey, {
     cookies: {
