@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Base Neutral Colors (Light) */
+    --background: 210 20% 98%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    /* Primary Accent: Deep Financial Emerald */
+    --primary: 160 84% 33%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 160 84% 28%;
+
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 210 40% 96%;
+    --accent-foreground: 222 47% 11%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 160 84% 33%;
+
+    /* Semantic Financial Tokens */
+    --positive: 158 64% 40%;
+    --positive-foreground: 0 0% 100%;
+    --positive-subtle: 152 76% 94%;
+
+    --negative: 350 89% 60%;
+    --negative-foreground: 0 0% 100%;
+    --negative-subtle: 354 100% 95%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    --warning-subtle: 48 96% 93%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* Base Neutral Colors (Dark - Slate Midnight) */
+    --background: 224 71% 4%;
+    --foreground: 213 31% 95%;
+
+    --card: 224 71% 7%;
+    --card-foreground: 213 31% 95%;
+
+    --popover: 224 71% 7%;
+    --popover-foreground: 213 31% 95%;
+
+    /* Primary Accent: Crisp Emerald */
+    --primary: 158 64% 52%;
+    --primary-foreground: 224 71% 4%;
+    --primary-hover: 158 64% 45%;
+
+    --secondary: 223 47% 14%;
+    --secondary-foreground: 213 31% 95%;
+
+    --muted: 223 47% 13%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 223 47% 14%;
+    --accent-foreground: 213 31% 95%;
+
+    --border: 223 47% 15%;
+    --input: 223 47% 15%;
+    --ring: 158 64% 52%;
+
+    /* Semantic Financial Tokens (Dark) */
+    --positive: 158 64% 48%;
+    --positive-foreground: 224 71% 4%;
+    --positive-subtle: 158 64% 15%;
+
+    --negative: 350 89% 65%;
+    --negative-foreground: 0 0% 100%;
+    --negative-subtle: 350 89% 15%;
+
+    --warning: 38 92% 55%;
+    --warning-foreground: 224 71% 4%;
+    --warning-subtle: 38 92% 15%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased selection:bg-primary/20 selection:text-foreground min-h-screen flex flex-col;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  /* Financial values must be tabular to prevent jitter and misalignment */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}

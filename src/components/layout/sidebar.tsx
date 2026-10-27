@@ -1,0 +1,136 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import {
+  LayoutDashboard,
+  WalletCards,
+  ArrowLeftRight,
+  Target,
+  TrendingUp,
+  ShieldCheck,
+  LogIn,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
+
+export const navigationItems = [
+  {
+    name: "Dashboard",
+    href: "/dashboard",
+    icon: LayoutDashboard,
+    description: "Ringkasan kondisi finansial",
+  },
+  {
+    name: "Wallet",
+    href: "/wallets",
+    icon: WalletCards,
+    description: "Multi-akun dan aset",
+  },
+  {
+    name: "Transaksi",
+    href: "/transactions",
+    icon: ArrowLeftRight,
+    description: "Pemasukan, pengeluaran & transfer",
+  },
+  {
+    name: "Goals",
+    href: "/goals",
+    icon: Target,
+    description: "Tujuan finansial & alokasi dana",
+  },
+  {
+    name: "Insight",
+    href: "/insights",
+    icon: TrendingUp,
+    description: "Analisis dan evaluasi finansial",
+  },
+];
+
+export function Sidebar() {
+  const pathname = usePathname();
+
+  return (
+    <aside className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 z-30 border-r border-border bg-card">
+      {/* Brand Header */}
+      <div className="flex h-16 items-center justify-between px-6 border-b border-border">
+        <Link href="/dashboard" className="flex items-center gap-2.5">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold shadow-sm">
+            T
+          </div>
+          <div className="flex flex-col">
+            <span className="text-base font-bold tracking-tight text-foreground">
+              TamaWallet
+            </span>
+            <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
+              Personal Finance
+            </span>
+          </div>
+        </Link>
+        <Badge variant="outline" className="text-[10px] px-1.5 py-0 font-mono">
+          MVP
+        </Badge>
+      </div>
+
+      {/* Main Navigation */}
+      <div className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
+        <div className="px-3 pb-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+          Navigasi Utama
+        </div>
+        {navigationItems.map((item) => {
+          const Icon = item.icon;
+          const isActive =
+            pathname === item.href ||
+            (item.href !== "/dashboard" && pathname.startsWith(item.href));
+
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                "group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                isActive
+                  ? "bg-primary/10 text-primary font-semibold"
+                  : "text-muted-foreground hover:bg-accent hover:text-foreground"
+              )}
+            >
+              <Icon
+                className={cn(
+                  "h-4 w-4 transition-colors",
+                  isActive
+                    ? "text-primary"
+                    : "text-muted-foreground group-hover:text-foreground"
+                )}
+              />
+              <span className="flex-1">{item.name}</span>
+            </Link>
+          );
+        })}
+      </div>
+
+      {/* Footer Info / Auth status */}
+      <div className="border-t border-border p-4 space-y-3 bg-card/60">
+        <div className="rounded-md border border-border/80 bg-background/50 p-2.5">
+          <div className="flex items-center gap-2 text-xs font-medium text-foreground">
+            <ShieldCheck className="h-4 w-4 text-primary" />
+            <span>Fondasi: Modul 0</span>
+          </div>
+          <p className="mt-1 text-[11px] text-muted-foreground leading-relaxed">
+            Presisi deterministik, bebas mock data palsu.
+          </p>
+        </div>
+
+        <Link
+          href="/login"
+          className="flex items-center justify-between rounded-md px-3 py-2 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+        >
+          <span className="flex items-center gap-2">
+            <LogIn className="h-3.5 w-3.5" />
+            <span>Halaman Login</span>
+          </span>
+          <span className="text-[10px] text-muted-foreground">Terpisah</span>
+        </Link>
+      </div>
+    </aside>
+  );
+}
