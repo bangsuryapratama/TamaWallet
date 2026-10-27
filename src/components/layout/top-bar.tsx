@@ -53,18 +53,24 @@ export function TopBar() {
   );
 
   return (
-    <header className="sticky top-0 z-20 flex h-14 items-center justify-between border-b border-zinc-200 bg-white px-4 md:px-8">
+    <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-zinc-100 bg-white/80 backdrop-blur-xl px-4 md:px-8">
       {/* Mobile Title & Desktop Breadcrumb */}
       <div className="flex items-center gap-3">
-        <Link href="/dashboard" className="md:hidden flex items-center gap-2">
-          <div className="flex h-6 w-6 items-center justify-center rounded-md bg-zinc-950 text-white shadow-sm">
-            <LogoIcon size={13} className="text-white" />
+        <Link
+          href="/dashboard"
+          className="flex items-center gap-2.5 active:scale-95 transition-transform"
+        >
+          <div className="flex h-7 w-7 items-center justify-center rounded-[9px] bg-zinc-950 text-white shadow-xs">
+            <LogoIcon size={14} className="text-white" />
           </div>
           <span className="font-extrabold text-sm tracking-tight text-zinc-950">
             Tama<span className="font-normal text-zinc-400">Wallet</span>
           </span>
         </Link>
-        <span className="hidden md:inline-block text-sm font-medium text-zinc-900">
+        <span className="hidden md:inline-block text-xs font-medium text-zinc-400">
+          /
+        </span>
+        <span className="hidden md:inline-block text-sm font-semibold text-zinc-900">
           {currentItem?.name || "Dashboard"}
         </span>
       </div>
@@ -72,22 +78,22 @@ export function TopBar() {
       {/* Auth action */}
       <div className="flex items-center gap-3">
         {user ? (
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-zinc-600 hidden sm:inline">
+          <div className="flex items-center gap-2.5">
+            <span className="text-xs text-zinc-500 hidden sm:inline-block max-w-[160px] truncate font-medium">
               {user.email}
             </span>
             <button
               onClick={handleSignOut}
-              className="text-xs text-zinc-500 hover:text-zinc-900 flex items-center gap-1.5 transition-colors cursor-pointer"
+              className="h-8 px-3 rounded-full border border-zinc-200/90 bg-zinc-50 hover:bg-zinc-100 text-zinc-700 text-xs font-semibold flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer shadow-2xs"
             >
-              <LogOut className="h-3.5 w-3.5" />
+              <LogOut className="h-3.5 w-3.5 text-zinc-500" />
               <span>Keluar</span>
             </button>
           </div>
         ) : (
           <Link
             href="/login"
-            className="text-xs font-medium text-zinc-700 hover:text-zinc-900 flex items-center gap-1.5 transition-colors"
+            className="h-8 px-3.5 rounded-full bg-zinc-950 hover:bg-zinc-800 text-white text-xs font-semibold flex items-center gap-1.5 transition-all active:scale-95 shadow-xs"
           >
             <LogIn className="h-3.5 w-3.5" />
             <span>Masuk</span>

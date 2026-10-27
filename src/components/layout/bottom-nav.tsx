@@ -7,17 +7,15 @@ import {
   LayoutDashboard,
   WalletCards,
   ArrowLeftRight,
-  Target,
-  TrendingUp,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+// Tab Utama yang ditampilkan di Bottom Bar (hanya 3 pilar utama harian)
+// Sisa fitur (Goals & Insight) diakses langsung melalui dashboard kokpit
 const mobileNavItems = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Wallet", href: "/wallets", icon: WalletCards },
   { name: "Transaksi", href: "/transactions", icon: ArrowLeftRight },
-  { name: "Goals", href: "/goals", icon: Target },
-  { name: "Insight", href: "/insights", icon: TrendingUp },
+  { name: "Wallet", href: "/wallets", icon: WalletCards },
 ];
 
 export function BottomNav() {
@@ -42,7 +40,7 @@ export function BottomNav() {
     setOptimisticIndex(null);
   }, [pathname]);
 
-  // Prefetch seluruh 5 tab sekaligus saat komponen di-mount agar chunk JS/HTML sudah di-cache lokal
+  // Prefetch seluruh tab utama sekaligus saat komponen di-mount
   React.useEffect(() => {
     mobileNavItems.forEach((item) => {
       router.prefetch(item.href);
@@ -53,22 +51,22 @@ export function BottomNav() {
   const activeIndex = optimisticIndex !== null ? optimisticIndex : currentRouteIndex;
 
   return (
-    <nav className="md:hidden fixed bottom-5 inset-x-3 max-w-[390px] mx-auto z-40 touch-manipulation">
-      <div className="relative bg-white/90 backdrop-blur-2xl border border-zinc-200/90 rounded-[28px] shadow-[0_12px_36px_-6px_rgba(0,0,0,0.12),0_2px_8px_rgba(0,0,0,0.04)] px-1.5 py-1.5 h-[66px] overflow-hidden">
+    <nav className="md:hidden fixed bottom-5 inset-x-4 max-w-[320px] mx-auto z-40 touch-manipulation">
+      <div className="relative bg-white/90 backdrop-blur-2xl border border-zinc-200/90 rounded-[28px] shadow-[0_14px_38px_-6px_rgba(0,0,0,0.12),0_2px_8px_rgba(0,0,0,0.04)] px-1.5 py-1.5 h-[66px] overflow-hidden">
         {/* Sliding Tactile Black Pill Indicator (Hardware Accelerated GPU Motion) */}
         <div
           aria-hidden="true"
           className="absolute top-1.5 bottom-1.5 left-1.5 pointer-events-none transition-transform duration-250 ease-[cubic-bezier(0.25,1,0.5,1)] will-change-transform"
           style={{
-            width: "calc((100% - 12px) / 5)",
+            width: "calc((100% - 12px) / 3)",
             transform: `translate3d(${activeIndex * 100}%, 0, 0)`,
           }}
         >
-          <div className="w-10 h-7 rounded-full bg-zinc-950 shadow-sm mx-auto mt-0.5" />
+          <div className="w-12 h-7 rounded-full bg-zinc-950 shadow-sm mx-auto mt-0.5" />
         </div>
 
-        {/* 5 Tab Navigation Items */}
-        <div className="relative z-10 grid grid-cols-5 h-full items-center">
+        {/* 3 Tab Navigation Items */}
+        <div className="relative z-10 grid grid-cols-3 h-full items-center">
           {mobileNavItems.map((item, index) => {
             const Icon = item.icon;
             const isActive = activeIndex === index;
@@ -79,7 +77,7 @@ export function BottomNav() {
                 href={item.href}
                 prefetch={true}
                 onPointerDown={() => {
-                  // Berikan feedback visual 0ms instan tepat saat jari/kursor menekan layar
+                  // Berikan feedback visual 0ms instan tepat saat jari menekan layar
                   setOptimisticIndex(index);
                 }}
                 onMouseEnter={() => {
@@ -89,7 +87,7 @@ export function BottomNav() {
               >
                 <div
                   className={cn(
-                    "flex items-center justify-center w-10 h-7 transition-colors duration-150",
+                    "flex items-center justify-center w-12 h-7 transition-colors duration-150",
                     isActive ? "text-white" : "text-zinc-400 hover:text-zinc-600"
                   )}
                 >
@@ -97,10 +95,10 @@ export function BottomNav() {
                 </div>
                 <span
                   className={cn(
-                    "text-[10px] tracking-tight leading-none transition-colors duration-150",
+                    "text-[11px] tracking-tight leading-none transition-colors duration-150 font-medium",
                     isActive
                       ? "text-zinc-950 font-bold"
-                      : "text-zinc-400 font-medium"
+                      : "text-zinc-400 hover:text-zinc-600"
                   )}
                 >
                   {item.name}
