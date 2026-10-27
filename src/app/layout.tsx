@@ -12,6 +12,12 @@ const plusJakarta = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   title: "TamaWallet — Pengelolaan Keuangan Pribadi",
   description: "Aplikasi pengelolaan keuangan pribadi yang bersih, akurat, dan mandiri.",
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+  },
 };
 
 export const viewport: Viewport = {

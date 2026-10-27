@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Obsidian dark rounded background -->
+  <rect width="32" height="32" rx="7" fill="#09090b" />
+  
+  <!-- Outer wallet silhouette -->
+  <rect x="5.5" y="7.5" width="21" height="17" rx="3.5" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+  
+  <!-- Ledger 'T' Bar -->
+  <path d="M10 12.5H22" stroke="#ffffff" stroke-width="2" stroke-linecap="round" />
+  <path d="M16 12.5V19.5" stroke="#ffffff" stroke-width="2" stroke-linecap="round" />
+  
+  <!-- Precision asset dot -->
+  <circle cx="21" cy="16.5" r="1.2" fill="#ffffff" />
+</svg>

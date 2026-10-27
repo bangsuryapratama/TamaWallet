@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2, Eye, EyeOff } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/env";
+import { LogoIcon } from "@/components/ui/logo";
 
 type AuthMode = "signin" | "signup";
 
@@ -115,13 +116,15 @@ function LoginForm() {
 
   return (
     <div className="w-full max-w-[400px] mx-auto">
-      {/* Brand & Heading */}
-      <div className="text-center mb-6 sm:mb-8">
-        <Link
-          href="/"
-          className="inline-flex items-center justify-center w-11 h-11 rounded-2xl bg-zinc-950 text-white font-black text-lg shadow-sm hover:bg-black transition-colors mb-3"
-        >
-          T
+      {/* Brand Header */}
+      <div className="flex flex-col items-center text-center mb-6 sm:mb-8">
+        <Link href="/" className="inline-flex items-center gap-2.5 mb-4 group">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-950 text-white shadow-sm transition-transform group-hover:scale-105">
+            <LogoIcon size={20} className="text-white" />
+          </div>
+          <span className="text-xl font-extrabold tracking-tight text-zinc-950">
+            Tama<span className="font-normal text-zinc-400">Wallet</span>
+          </span>
         </Link>
         <h1 className="text-2xl font-bold tracking-tight text-zinc-950">
           {mode === "signin" ? "Masuk ke Akun" : "Daftar Akun"}
@@ -314,6 +317,16 @@ function LoginForm() {
             </span>
           )}
         </div>
+      </div>
+
+      {/* Discrete Link to Dashboard */}
+      <div className="text-center mt-6">
+        <Link
+          href="/dashboard"
+          className="text-xs font-medium text-zinc-400 hover:text-zinc-700 transition-colors"
+        >
+          Lihat pratinjau dashboard &rarr;
+        </Link>
       </div>
     </div>
   );

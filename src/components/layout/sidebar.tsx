@@ -15,6 +15,7 @@ import {
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
 import { User } from "@supabase/supabase-js";
+import { LogoIcon } from "@/components/ui/logo";
 
 export const navigationItems = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -67,8 +68,13 @@ export function Sidebar() {
     <aside className="hidden md:flex md:w-60 md:flex-col md:fixed md:inset-y-0 z-30 border-r border-zinc-200 bg-white">
       {/* Brand Header */}
       <div className="flex h-16 items-center px-6 border-b border-zinc-100">
-        <Link href="/dashboard" className="text-base font-bold tracking-tight text-zinc-900">
-          TamaWallet
+        <Link href="/dashboard" className="flex items-center gap-2.5">
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-zinc-950 text-white shadow-sm">
+            <LogoIcon size={16} className="text-white" />
+          </div>
+          <span className="text-base font-extrabold tracking-tight text-zinc-950">
+            Tama<span className="font-normal text-zinc-400">Wallet</span>
+          </span>
         </Link>
       </div>
 
