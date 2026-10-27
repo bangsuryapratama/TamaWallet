@@ -71,10 +71,13 @@ const config: Config = {
       },
       fontFamily: {
         sans: [
-          "var(--font-sans)",
-          "system-ui",
           "-apple-system",
           "BlinkMacSystemFont",
+          "'SF Pro Display'",
+          "'SF Pro Text'",
+          "var(--font-sans)",
+          "system-ui",
+          "'Plus Jakarta Sans'",
           "'Segoe UI'",
           "Roboto",
           "sans-serif",

@@ -169,7 +169,7 @@ export function DashboardView({ initialUser }: DashboardViewProps) {
               </button>
             </div>
 
-            {/* Baris 2: Angka Saldo Utama Sesuai Mode Aktif (Responsive BCA-Style) */}
+            {/* Baris 2: Angka Saldo Utama Sesuai Mode Aktif (Responsive BCA-Style Sans-Serif) */}
             <div className="pt-1">
               <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
                 {activeBalance.label}
@@ -177,11 +177,11 @@ export function DashboardView({ initialUser }: DashboardViewProps) {
               <div className="flex items-baseline gap-1.5 whitespace-nowrap overflow-hidden mt-1.5">
                 {showBalance ? (
                   <>
-                    <span className="text-lg sm:text-xl font-bold font-mono text-zinc-400 select-none shrink-0">
+                    <span className="text-lg sm:text-xl font-bold text-zinc-400 select-none shrink-0">
                       Rp
                     </span>
                     <span
-                      className="font-black tracking-tight font-mono text-white tabular-nums leading-none"
+                      className="font-black tracking-tight text-white tabular-nums leading-none"
                       style={{
                         fontSize: "clamp(2rem, 7vw, 3rem)",
                         lineHeight: 1.1,
@@ -192,7 +192,7 @@ export function DashboardView({ initialUser }: DashboardViewProps) {
                   </>
                 ) : (
                   <span
-                    className="font-black tracking-widest font-mono text-zinc-500 select-none leading-none"
+                    className="font-black tracking-widest text-zinc-500 select-none leading-none"
                     style={{
                       fontSize: "clamp(1.5rem, 6vw, 2.25rem)",
                       lineHeight: 1.1,
@@ -220,7 +220,7 @@ export function DashboardView({ initialUser }: DashboardViewProps) {
                 )}
               >
                 <p className="text-[10px] text-zinc-400 font-medium">1. Siap Pakai</p>
-                <p className="text-xs font-bold font-mono text-zinc-100 mt-0.5 tabular-nums truncate">
+                <p className="text-xs font-bold text-zinc-100 mt-0.5 tabular-nums truncate">
                   {showBalance ? balanceData.spendable.short : "••••"}
                 </p>
               </button>
@@ -236,7 +236,7 @@ export function DashboardView({ initialUser }: DashboardViewProps) {
                 )}
               >
                 <p className="text-[10px] text-zinc-400 font-medium">2. Tabungan</p>
-                <p className="text-xs font-bold font-mono text-zinc-100 mt-0.5 tabular-nums truncate">
+                <p className="text-xs font-bold text-zinc-100 mt-0.5 tabular-nums truncate">
                   {showBalance ? balanceData.savings.short : "••••"}
                 </p>
               </button>
@@ -252,7 +252,7 @@ export function DashboardView({ initialUser }: DashboardViewProps) {
                 )}
               >
                 <p className="text-[10px] text-zinc-400 font-medium">3. Total Aset</p>
-                <p className="text-xs font-bold font-mono text-zinc-100 mt-0.5 tabular-nums truncate">
+                <p className="text-xs font-bold text-zinc-100 mt-0.5 tabular-nums truncate">
                   {showBalance ? balanceData.total.short : "••••"}
                 </p>
               </button>
@@ -267,7 +267,7 @@ export function DashboardView({ initialUser }: DashboardViewProps) {
                   </span>
                   <span>Cuan Masuk</span>
                 </div>
-                <p className="text-base sm:text-lg font-bold font-mono text-emerald-400 pl-5.5 tabular-nums">
+                <p className="text-base sm:text-lg font-bold text-emerald-400 pl-5.5 tabular-nums">
                   + Rp 0
                 </p>
               </div>
@@ -279,7 +279,7 @@ export function DashboardView({ initialUser }: DashboardViewProps) {
                   </span>
                   <span>Jajan Keluar</span>
                 </div>
-                <p className="text-base sm:text-lg font-bold font-mono text-zinc-200 pl-5.5 tabular-nums">
+                <p className="text-base sm:text-lg font-bold text-zinc-200 pl-5.5 tabular-nums">
                   - Rp 0
                 </p>
               </div>
@@ -432,7 +432,7 @@ export function DashboardView({ initialUser }: DashboardViewProps) {
                     <p className="text-[10px] text-zinc-400">Tabungan & Payroll</p>
                   </div>
                 </div>
-                <p className="text-sm font-bold font-mono text-zinc-950 tabular-nums">
+                <p className="text-sm font-bold text-zinc-950 tabular-nums">
                   Rp 0
                 </p>
               </div>
@@ -447,7 +447,7 @@ export function DashboardView({ initialUser }: DashboardViewProps) {
                     <p className="text-[10px] text-zinc-400">GoPay, Shopee & Dana</p>
                   </div>
                 </div>
-                <p className="text-sm font-bold font-mono text-zinc-950 tabular-nums">
+                <p className="text-sm font-bold text-zinc-950 tabular-nums">
                   Rp 0
                 </p>
               </div>
@@ -462,7 +462,7 @@ export function DashboardView({ initialUser }: DashboardViewProps) {
                     <p className="text-[10px] text-zinc-400">Uang Fisik di Dompet</p>
                   </div>
                 </div>
-                <p className="text-sm font-bold font-mono text-zinc-950 tabular-nums">
+                <p className="text-sm font-bold text-zinc-950 tabular-nums">
                   Rp 0
                 </p>
               </div>
@@ -495,15 +495,15 @@ export function DashboardView({ initialUser }: DashboardViewProps) {
 
             <div className="p-3.5 rounded-xl bg-zinc-50 border border-zinc-100 space-y-2">
               <div className="flex items-center justify-between text-xs">
-                <span className="font-semibold text-zinc-900">Dana Darurat</span>
-                <span className="font-mono text-zinc-500">0%</span>
+                <span className="font-semibold text-zinc-900">Dana Darurat Santai</span>
+                <span className="font-semibold text-zinc-500">0%</span>
               </div>
 
               <div className="h-1.5 w-full rounded-full bg-zinc-200 overflow-hidden">
                 <div className="h-full bg-zinc-950 rounded-full w-0" />
               </div>
 
-              <div className="flex items-center justify-between text-[11px] text-zinc-400 font-mono">
+              <div className="flex items-center justify-between text-[11px] text-zinc-400 font-medium">
                 <span>Terkumpul: Rp 0</span>
                 <span>Target: Rp 25.000.000</span>
               </div>
