@@ -40,7 +40,7 @@ export function BottomNav() {
   ];
 
   React.useEffect(() => {
-    ["/dashboard", "/wallets", "/transactions", "/profile"].forEach((href) => {
+    ["/dashboard", "/wallets", "/transactions", "/profile", "/goals", "/insights"].forEach((href) => {
       router.prefetch(href);
     });
   }, [router]);

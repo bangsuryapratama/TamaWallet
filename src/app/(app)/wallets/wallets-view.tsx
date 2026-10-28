@@ -344,7 +344,7 @@ export function WalletsView({ initialUser }: WalletsViewProps) {
   };
 
   return (
-    <div className="space-y-6 pb-52 md:pb-24 max-w-4xl mx-auto">
+    <div className="space-y-6 pb-52 md:pb-24 max-w-4xl mx-auto animate-page-enter">
       {/* 1. Header Kantong Duit */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-1">
         <div>
@@ -367,7 +367,7 @@ export function WalletsView({ initialUser }: WalletsViewProps) {
       </div>
 
       {/* 2. Cockpit Kartu Total Seluruh Kantong + Dopamine Allocation Bar */}
-      <div className="rounded-3xl bg-zinc-950 text-white p-6 sm:p-7 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.35)] space-y-5">
+      <div className="rounded-3xl bg-zinc-950 text-white p-6 sm:p-7 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.35)] space-y-5 card-tactile">
         <div className="flex items-center justify-between">
           <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
             Total Seluruh Kantong

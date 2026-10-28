@@ -296,7 +296,7 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="space-y-6 pb-52 md:pb-24 max-w-2xl mx-auto">
+    <div className="space-y-6 pb-52 md:pb-24 max-w-2xl mx-auto animate-page-enter">
       {/* 1. Header Top Bersih */}
       <div className="pt-1">
         <h1 className="text-xl sm:text-2xl font-black tracking-tight text-zinc-950">
@@ -308,7 +308,7 @@ export default function ProfilePage() {
       </div>
 
       {/* 2. Hero Bento Profile Card: Obsidian Dark Luxury (Apple ID style) */}
-      <div className="relative p-6 sm:p-7 rounded-[30px] bg-gradient-to-br from-[#18181B] via-[#0E0E11] to-[#050507] text-white border border-zinc-800 shadow-xl overflow-hidden transform-gpu will-change-transform">
+      <div className="relative p-6 sm:p-7 rounded-[30px] bg-gradient-to-br from-[#18181B] via-[#0E0E11] to-[#050507] text-white border border-zinc-800 shadow-xl overflow-hidden transform-gpu will-change-transform card-tactile">
         {/* Glow Sheen */}
         <div className="pointer-events-none absolute -top-20 -right-20 h-52 w-52 rounded-full bg-emerald-500/15 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-20 -left-20 h-52 w-52 rounded-full bg-cyan-500/10 blur-3xl" />

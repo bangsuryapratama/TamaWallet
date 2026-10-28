@@ -280,7 +280,7 @@ export function TransactionsView({ initialUser: _initialUser }: TransactionsView
   }, [filteredTransactions]);
 
   return (
-    <div className="space-y-5 pb-52 md:pb-24 max-w-3xl mx-auto">
+    <div className="space-y-5 pb-52 md:pb-24 max-w-3xl mx-auto animate-page-enter">
       {/* 1. Header Top Bersih (Tanpa Tombol Ganda yang Menumpuk di Mobile) */}
       <div className="flex items-center justify-between pt-1">
         <div>
