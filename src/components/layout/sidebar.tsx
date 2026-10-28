@@ -11,6 +11,7 @@ import {
   TrendingUp,
   LogOut,
   User as UserIcon,
+  Plus,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
@@ -131,8 +132,22 @@ export function Sidebar({ initialUser = null }: SidebarProps) {
         </Link>
       </div>
 
+      {/* Quick Action Button for Desktop */}
+      <div className="px-3 pt-4 pb-1">
+        <button
+          type="button"
+          onClick={() => {
+            window.dispatchEvent(new CustomEvent("tamawallet:open-quick-tx"));
+          }}
+          className="w-full h-9 rounded-xl bg-zinc-950 hover:bg-zinc-800 text-white text-xs font-bold flex items-center justify-center gap-2 shadow-sm transition-all active:scale-[0.98] cursor-pointer"
+        >
+          <Plus className="h-4 w-4 stroke-[2.5]" />
+          <span>Catat Transaksi</span>
+        </button>
+      </div>
+
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
+      <nav className="flex-1 overflow-y-auto px-3 py-2 space-y-0.5">
         {navigationItems.map((item) => {
           const Icon = item.icon;
           const currentActive =

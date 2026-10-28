@@ -7,6 +7,8 @@ import {
   Home,
   Wallet,
   ArrowLeftRight,
+  Target,
+  TrendingUp,
   User,
   Plus,
 } from "lucide-react";
@@ -31,48 +33,46 @@ export function BottomNav() {
 
   const currentPath = optimisticPath || pathname;
 
+  // 6 Tab Navigasi Lengkap (100% Selaras dengan Desktop Sidebar)
   const tabs = [
-    { name: "Home", href: "/dashboard", icon: Home, isCenter: false },
-    { name: "Kantong", href: "/wallets", icon: Wallet, isCenter: false },
-    { name: "Catat", href: "#", icon: Plus, isCenter: true },
-    { name: "Riwayat", href: "/transactions", icon: ArrowLeftRight, isCenter: false },
-    { name: "Profil", href: "/profile", icon: User, isCenter: false },
+    { name: "Home", href: "/dashboard", icon: Home },
+    { name: "Kantong", href: "/wallets", icon: Wallet },
+    { name: "Riwayat", href: "/transactions", icon: ArrowLeftRight },
+    { name: "Goals", href: "/goals", icon: Target },
+    { name: "Insight", href: "/insights", icon: TrendingUp },
+    { name: "Profil", href: "/profile", icon: User },
   ];
 
   React.useEffect(() => {
-    ["/dashboard", "/wallets", "/transactions", "/profile", "/goals", "/insights"].forEach((href) => {
+    ["/dashboard", "/wallets", "/transactions", "/goals", "/insights", "/profile"].forEach((href) => {
       router.prefetch(href);
     });
   }, [router]);
 
   return (
     <>
-      <nav className="md:hidden fixed bottom-6 inset-x-0 mx-auto w-[335px] z-40 touch-manipulation pointer-events-none select-none transform-gpu will-change-transform">
-        {/* Symmetrical Tactile Floating Glass Dock (GPU Accelerated & Lightweight) */}
-        <div className="pointer-events-auto relative transform-gpu bg-white/90 backdrop-blur-xl border border-zinc-200/80 rounded-[30px] shadow-[0_12px_32px_-6px_rgba(0,0,0,0.12)] px-2 h-[68px] grid grid-cols-5 items-center">
+      {/* Mobile Floating Action Button (FAB) Catat Transaksi Cepat */}
+      <div className="md:hidden fixed bottom-24 right-4 z-40 touch-manipulation pointer-events-auto">
+        <button
+          type="button"
+          onClick={() => setIsQuickModalOpen(true)}
+          title="Catat Cepat Cuan / Jajan"
+          className="group flex h-12 w-12 items-center justify-center rounded-2xl bg-zinc-950 text-white shadow-[0_10px_24px_-4px_rgba(0,0,0,0.4)] border border-zinc-700/60 active:scale-75 transition-all duration-150 cursor-pointer touch-manipulation hover:bg-zinc-800"
+        >
+          <Plus className="h-6 w-6 stroke-[2.8] transition-transform duration-200 group-active:rotate-90" />
+          <span className="sr-only">Catat Cepat</span>
+        </button>
+      </div>
+
+      {/* Symmetrical Tactile Floating Glass Dock (6 Tabs Lengkap) */}
+      <nav className="md:hidden fixed bottom-5 inset-x-0 mx-auto w-[calc(100%-1.5rem)] max-w-[390px] z-40 touch-manipulation pointer-events-none select-none transform-gpu will-change-transform">
+        <div className="pointer-events-auto relative transform-gpu bg-white/95 backdrop-blur-xl border border-zinc-200/90 rounded-[28px] shadow-[0_12px_32px_-6px_rgba(0,0,0,0.12)] px-1 h-[62px] grid grid-cols-6 items-center">
           {tabs.map((tab, idx) => {
             const Icon = tab.icon;
             const isActive =
               currentPath === tab.href ||
-              (tab.href !== "/dashboard" && tab.href !== "#" && currentPath.startsWith(tab.href));
+              (tab.href !== "/dashboard" && currentPath.startsWith(tab.href));
 
-            // Tombol Tengah '+' (LANGSUNG BUKA MODAL CATAT ARUS KAS KELUAR / MASUK)
-            if (tab.isCenter) {
-              return (
-                <div key="center-action" className="flex items-center justify-center">
-                  <button
-                    type="button"
-                    onClick={() => setIsQuickModalOpen(true)}
-                    title="Catat Cuan / Jajan"
-                    className="flex h-12 w-12 items-center justify-center rounded-2xl bg-zinc-950 text-white shadow-[0_8px_20px_-2px_rgba(0,0,0,0.4)] active:scale-75 transition-all duration-150 cursor-pointer touch-manipulation hover:bg-zinc-800"
-                  >
-                    <Plus className="h-6 w-6 stroke-[2.8]" />
-                  </button>
-                </div>
-              );
-            }
-
-            // 4 Tab Navigasi Presisi ala iOS SF Symbols
             return (
               <Link
                 key={tab.name + idx}
@@ -80,13 +80,13 @@ export function BottomNav() {
                 prefetch={true}
                 onPointerDown={() => setOptimisticPath(tab.href)}
                 onMouseEnter={() => router.prefetch(tab.href)}
-                className="flex flex-col items-center justify-center h-12 rounded-2xl active:scale-75 transition-all duration-150 cursor-pointer touch-manipulation gap-0.5"
+                className="flex flex-col items-center justify-center h-12 rounded-xl active:scale-75 transition-all duration-150 cursor-pointer touch-manipulation gap-0.5"
               >
                 <Icon
                   className={cn(
-                    "h-5 w-5 transition-transform",
+                    "h-4.5 w-4.5 transition-transform",
                     isActive
-                      ? "stroke-[2.3] text-zinc-950 scale-105"
+                      ? "stroke-[2.4] text-zinc-950 scale-110"
                       : "stroke-[1.8] text-zinc-400 hover:text-zinc-700"
                   )}
                 />

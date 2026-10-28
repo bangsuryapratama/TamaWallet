@@ -120,17 +120,22 @@ export function TopBar({ initialUser = null }: TopBarProps) {
       <div className="flex items-center gap-2 sm:gap-3">
         {displayEmail || user ? (
           <div className="flex items-center gap-2 sm:gap-2.5">
-            {/* Apple SF Avatar Icon */}
-            <div
-              title={displayName}
-              className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-100 border border-zinc-200/80 text-zinc-900 font-bold text-xs select-none"
+            {/* Apple SF Avatar Icon (Clickable to /profile) */}
+            <Link
+              href="/profile"
+              title={`Buka profil ${displayName}`}
+              className="flex items-center gap-2 group cursor-pointer active:scale-95 transition-transform"
             >
-              {initial || <UserIcon className="h-3.5 w-3.5 stroke-[1.8]" />}
-            </div>
+              <div
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-100 border border-zinc-200/80 text-zinc-900 font-bold text-xs select-none group-hover:border-zinc-400 group-hover:bg-zinc-200 transition-colors"
+              >
+                {initial || <UserIcon className="h-3.5 w-3.5 stroke-[1.8]" />}
+              </div>
 
-            <span className="text-xs text-zinc-600 hidden sm:inline-block max-w-[140px] truncate font-medium">
-              {displayName}
-            </span>
+              <span className="text-xs text-zinc-600 hidden sm:inline-block max-w-[140px] truncate font-medium group-hover:text-zinc-950 transition-colors">
+                {displayName}
+              </span>
+            </Link>
 
             <button
               onClick={handleSignOut}
